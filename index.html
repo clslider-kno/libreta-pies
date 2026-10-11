@@ -1,0 +1,1384 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pepita Pie</title>
+<meta name="theme-color" content="#F07A12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Pepita Pie">
+<link rel="apple-touch-icon" href="iconos/icono-180.png">
+<link rel="icon" href="iconos/icono-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<style>
+@font-face{font-family:"Unbounded";src:url(fuentes/unbounded.woff2) format("woff2");font-weight:200 900;font-display:swap}
+@font-face{font-family:"Nunito Sans";src:url(fuentes/nunito-sans.woff2) format("woff2");font-weight:200 1000;font-display:swap}
+/* Libreta de bolsillo: una columna angosta, cifras grandes arriba, listas que se tocan, barra inferior fija. */
+:root{
+  --bg:#FFF6E0; --card:#FFFFFF; --fg:#3A1F08; --muted:#7D5C3D; --line:#F1DDBA;
+  --acento:#F07A12; --acento-fg:#2B1400; --acento-suave:#FFE6CC; --acento-txt:#B04A00;
+  --limon:#F7C916; --limon-suave:#FFF0B0; --limon-fg:#5A4300;
+  --semilla:#241000; --halo:rgba(255,236,170,.75);
+  --ok:#1D7748; --ok-suave:#DCF0E4; --malo:#B3261E; --malo-suave:#FBE2DF;
+  --sombra:0 1px 2px rgba(58,31,8,.07),0 4px 14px rgba(58,31,8,.08);
+  /* pepitas de maracuyá: semilla oscura con su gelatina clara alrededor */
+  --semillas:
+    radial-gradient(ellipse 3.5px 5px at 16px 20px,var(--semilla) 90%,transparent 100%),
+    radial-gradient(ellipse 4px 5px at 58px 12px,var(--semilla) 90%,transparent 100%),
+    radial-gradient(ellipse 5px 3.5px at 40px 46px,var(--semilla) 90%,transparent 100%),
+    radial-gradient(ellipse 3.5px 5px at 86px 38px,var(--semilla) 90%,transparent 100%),
+    radial-gradient(ellipse 4px 4.5px at 70px 68px,var(--semilla) 90%,transparent 100%),
+    radial-gradient(ellipse 5px 3.5px at 14px 64px,var(--semilla) 90%,transparent 100%),
+    radial-gradient(ellipse 7px 9px at 16px 20px,var(--halo) 85%,transparent 100%),
+    radial-gradient(ellipse 8px 9px at 58px 12px,var(--halo) 85%,transparent 100%),
+    radial-gradient(ellipse 9px 7px at 40px 46px,var(--halo) 85%,transparent 100%),
+    radial-gradient(ellipse 7px 9px at 86px 38px,var(--halo) 85%,transparent 100%),
+    radial-gradient(ellipse 8px 8.5px at 70px 68px,var(--halo) 85%,transparent 100%),
+    radial-gradient(ellipse 9px 7px at 14px 64px,var(--halo) 85%,transparent 100%);
+  --semillas-chicas:
+    radial-gradient(ellipse 1.6px 2.2px at 6px 6px,var(--semilla) 90%,transparent 100%),
+    radial-gradient(ellipse 2.2px 1.6px at 15px 11px,var(--semilla) 90%,transparent 100%),
+    radial-gradient(ellipse 1.6px 2.2px at 8px 15px,var(--semilla) 90%,transparent 100%);
+  --f-display:"Unbounded","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
+  --f-body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1B1108; --card:#2A1B0D; --fg:#FFF0DC; --muted:#CDAB88; --line:#47311B;
+  --acento:#FF9233; --acento-fg:#261100; --acento-suave:#4A2A0E; --acento-txt:#FFAE63;
+  --limon:#F7CF3D; --limon-suave:#3E3110; --limon-fg:#FBE38A;
+  --semilla:#1A0B00; --halo:rgba(255,226,140,.55);
+  --ok:#72D3A0; --ok-suave:#173326; --malo:#FF8C82; --malo-suave:#3E1D1B;
+  --sombra:0 1px 2px rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1B1108; --card:#2A1B0D; --fg:#FFF0DC; --muted:#CDAB88; --line:#47311B;
+  --acento:#FF9233; --acento-fg:#261100; --acento-suave:#4A2A0E; --acento-txt:#FFAE63;
+  --limon:#F7CF3D; --limon-suave:#3E3110; --limon-fg:#FBE38A;
+  --semilla:#1A0B00; --halo:rgba(255,226,140,.55);
+  --ok:#72D3A0; --ok-suave:#173326; --malo:#FF8C82; --malo-suave:#3E1D1B;
+  --sombra:0 1px 2px rgba(0,0,0,.35); color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.45}
+.app{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:12px 150px}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:-.01em;text-wrap:balance;margin:0}
+.num{font-variant-numeric:tabular-nums}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--acento-txt);outline-offset:2px}
+
+/* Encabezado */
+.top{display:flex;align-items:center;gap:12px;padding-block:6px 14px}
+.sello{width:46px;height:46px;border-radius:50%;flex:none;
+  background:var(--semillas-chicas),radial-gradient(circle,var(--limon) 0 35%,var(--acento) 75%);background-size:19px 19px,auto;
+  box-shadow:inset 0 0 0 4px var(--limon-suave),0 0 0 2px var(--acento)}
+.top h1{font-size:1.15rem}
+.top p{margin:0;color:var(--muted);font-size:.85rem}
+
+/* Caja */
+.caja{background:linear-gradient(135deg,var(--limon) 0%,var(--acento) 75%);color:var(--acento-fg);border-radius:22px;padding:18px;display:grid;gap:14px;
+  position:relative;overflow:hidden;isolation:isolate}
+.caja::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--semillas);background-size:100px 80px;
+  -webkit-mask-image:linear-gradient(105deg,transparent 35%,#000 80%);mask-image:linear-gradient(105deg,transparent 35%,#000 80%)}
+.caja .eti{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;opacity:.85;font-weight:800}
+.caja .grande{font-family:var(--f-display);font-size:2.3rem;line-height:1.05}
+.caja .tres{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.caja .tres div{background:rgba(255,248,230,.62);border-radius:14px;padding:10px;backdrop-filter:blur(2px)}
+.caja .tres strong{display:block;font-family:var(--f-display);font-size:1rem;margin-top:2px}
+.rapidas{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:800;background:var(--acento);color:var(--acento-fg);
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px}
+.btn.limon{background:var(--limon);color:#2B2200}
+.btn.suave{background:var(--acento-suave);color:var(--acento-txt)}
+.btn.borde{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.peligro{background:var(--malo);color:#fff}
+.btn.chico{min-height:36px;padding:7px 12px;border-radius:11px;font-size:.9rem}
+.btn:active{transform:scale(.98)}
+
+/* Secciones y listas */
+.sec{margin-top:26px}
+.sec-cab{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:10px}
+.sec-cab h2{font-size:1rem}
+.sec-cab .link{background:none;border:0;color:var(--acento-txt);font-weight:800;padding:4px}
+.lista{background:var(--card);border-radius:18px;box-shadow:var(--sombra);overflow:hidden}
+.fila{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);width:100%;
+  background:none;border-left:0;border-right:0;border-bottom:0;text-align:left}
+.fila:first-child{border-top:0}
+button.fila:hover{background:color-mix(in srgb,var(--acento) 5%,transparent)}
+.fila .txt{flex:1;min-width:0}
+.fila .t1{font-weight:800;overflow-wrap:anywhere}
+.fila .t2{color:var(--muted);font-size:.86rem;overflow-wrap:anywhere}
+.fila .der{text-align:right;flex:none;display:grid;gap:4px;justify-items:end}
+.monto{font-weight:800;font-variant-numeric:tabular-nums}
+.vacio{padding:22px 18px;text-align:center;color:var(--muted)}
+.vacio strong{display:block;color:var(--fg);margin-bottom:4px}
+.vacio .btn{margin-top:12px}
+
+.chip{display:inline-block;font-size:.74rem;font-weight:800;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.chip.debe{background:var(--malo-suave);color:var(--malo)}
+.chip.ok{background:var(--ok-suave);color:var(--ok)}
+.chip.reserva{background:var(--limon-suave);color:var(--limon-fg)}
+.chip.neutro{background:var(--acento-suave);color:var(--acento-txt)}
+
+.pie-ico{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--f-display);
+  font-size:.8rem;font-weight:700}
+.pie-ico.limon{background:radial-gradient(circle,var(--limon-suave) 0 12%,transparent 13%),
+  repeating-conic-gradient(var(--limon) 0 40deg,var(--limon-suave) 40deg 45deg);box-shadow:inset 0 0 0 3px var(--limon-suave),0 0 0 1.5px var(--limon)}
+.pie-ico.maracuya{background:var(--semillas-chicas),radial-gradient(circle,var(--limon) 0 30%,var(--acento) 80%);background-size:17px 17px,auto;
+  box-shadow:0 0 0 1.5px var(--acento)}
+.pie-ico.ambos{background:conic-gradient(var(--limon) 0 50%,var(--acento) 50% 100%);color:transparent}
+.pie-ico.otro{background:var(--bg);color:var(--muted);box-shadow:inset 0 0 0 2px var(--line)}
+
+.check{width:30px;height:30px;border-radius:50%;flex:none;border:2px solid var(--muted);background:transparent;display:grid;place-items:center}
+.check.si{background:var(--ok);border-color:var(--ok);color:var(--card)}
+
+.filtros{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.filtros button{flex:none;border:0;border-radius:99px;padding:8px 14px;font-weight:800;background:var(--card);color:var(--muted);box-shadow:inset 0 0 0 1.5px var(--line)}
+.filtros button[aria-pressed="true"]{background:var(--fg);color:var(--bg);box-shadow:none}
+.buscar{width:100%;border:0;border-radius:14px;padding:12px 14px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);margin-bottom:10px}
+
+.resumen-linea{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.resumen-linea div{flex:1 1 140px;background:var(--card);border-radius:16px;padding:12px 14px;box-shadow:var(--sombra)}
+.resumen-linea span{display:block;font-size:.75rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.resumen-linea strong{font-family:var(--f-display);font-size:1.15rem}
+.tres-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tres-tiles div{padding:10px}
+.tres-tiles span{font-size:.66rem}
+.tres-tiles strong{font-size:.95rem;display:block;overflow-wrap:anywhere}
+.tres-tiles em{font-size:.72rem}
+.resumen-linea em{display:block;font-style:normal;font-size:.8rem;color:var(--muted)}
+
+.tabla-prod{width:100%;border-collapse:collapse}
+.tabla-prod td{padding:10px 14px;border-top:1px solid var(--line)}
+.tabla-prod tr:first-child td{border-top:0}
+.tabla-prod td:last-child,.tabla-prod td:nth-child(2){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* Meta de ahorro */
+.meta,.meta-vacia{width:100%;margin-top:10px;border:0;text-align:left;border-radius:16px}
+.meta{display:grid;gap:6px;padding:12px 14px;background:var(--card);box-shadow:var(--sombra)}
+.meta-txt{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.meta-barra{height:12px;border-radius:99px;background:var(--limon-suave);overflow:hidden}
+.meta-barra span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--limon),var(--acento))}
+.meta .t2{color:var(--muted);font-size:.85rem}
+.meta-vacia{padding:10px 14px;background:transparent;color:var(--acento-txt);font-weight:800;outline:1.5px dashed var(--line);outline-offset:-1.5px}
+
+/* Venta rápida */
+.rapida{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rap{border:0;background:var(--card);box-shadow:var(--sombra);border-radius:16px;padding:12px;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;text-align:left;min-height:72px}
+.rap:active{transform:scale(.97);background:var(--limon-suave)}
+.rap-txt{display:grid;min-width:0}
+.rap-n{font-weight:800;font-size:.9rem;line-height:1.2;overflow-wrap:anywhere}
+.rap-p{color:var(--acento-txt);font-weight:800;font-size:.85rem}
+.rap-q{grid-column:1/-1;font-size:.78rem;font-weight:800;color:var(--muted)}
+.rap.agotado{opacity:.6}
+.rap.agotado .rap-q{color:var(--malo)}
+
+/* Pestañas Lista / Resumen */
+.pestanas{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:14px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);margin-bottom:12px}
+.pestanas button{border:0;border-radius:10px;padding:9px;font-weight:800;background:transparent;color:var(--muted)}
+.pestanas button[aria-selected="true"]{background:var(--acento);color:var(--acento-fg)}
+
+/* Gráfico de 7 días: una serie, barras finas con punta redondeada sobre la línea base */
+.grafico{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;height:170px;padding:14px 14px 0}
+.grafico .col{border:0;background:none;padding:0;display:grid;grid-template-rows:18px 1fr 22px;justify-items:center;height:100%;min-width:0}
+.grafico .val{font-size:.68rem;font-weight:800;white-space:nowrap;color:var(--fg)}
+.grafico .b-zona{display:flex;align-items:flex-end}
+.grafico .b{align-self:end;width:min(26px,100%);background:var(--acento);border-radius:4px 4px 0 0;box-shadow:0 1px 0 var(--line)}
+.grafico .col{position:relative}
+.grafico .col::before{content:"";position:absolute;left:0;right:0;bottom:22px;border-bottom:1px solid var(--line)}
+.grafico .col[aria-pressed="true"] .b{background:var(--acento-txt)}
+.grafico .col[aria-pressed="true"] .dia{color:var(--fg)}
+.grafico .dia{font-size:.72rem;font-weight:800;color:var(--muted);align-self:center}
+.hfila{display:grid;gap:6px}
+.hfila-cab{display:flex;align-items:center;gap:8px}
+.hfila-cab strong{flex:1}
+.hfila-cab .pie-ico{width:26px;height:26px}
+.hbarra{height:10px;border-radius:0 4px 4px 0;background:var(--bg)}
+.hbarra span{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--muted)}
+.hbarra span.limon{background:var(--limon)}
+.hbarra span.maracuya{background:var(--acento)}
+.pos{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--limon-suave);color:var(--limon-fg);font-weight:800}
+
+/* Ingredientes de la receta */
+.ings{display:grid;gap:8px}
+.ing{background:var(--bg);border-radius:14px;padding:10px;display:grid;gap:8px}
+.ing-top{display:flex;gap:8px}
+.ing input{border:0;border-radius:10px;padding:9px 10px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);width:100%;min-width:0;font-weight:600}
+.ing-top input{font-weight:800}
+.ing-x{border:0;background:none;font-size:1.4rem;width:36px;flex:none;color:var(--muted)}
+.ing-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.ing-grid label{display:grid;gap:3px;font-size:.72rem;font-weight:800;color:var(--muted)}
+.ing .g-costo{font-size:.8rem;color:var(--acento-txt);font-weight:800}
+.ing .g-costo:empty{display:none}
+.stepper .cant{width:52px;text-align:center;border:0;border-radius:10px;padding:8px 4px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:800;font-size:1.05rem}
+.toast{display:flex;align-items:center;gap:12px}
+.toast-acc{border:0;background:var(--limon);color:#2B2200;font-weight:800;border-radius:9px;padding:6px 10px}
+.btn:disabled{opacity:.45}
+.eti-antes{border:0;background:none;padding:2px 0;color:inherit;font-size:.78rem;font-weight:800;opacity:.85;margin-top:2px;text-decoration:underline;text-underline-offset:3px}
+.link-chico{border:0;background:none;color:var(--acento-txt);font-weight:800;padding:0 4px;font-size:.85rem}
+.alcanza{display:grid;justify-items:center;flex:none;min-width:52px;font-size:.75rem;font-weight:800;color:var(--muted)}
+.alcanza strong{font-family:var(--f-display);font-size:1.5rem;color:var(--acento-txt);line-height:1.1}
+.desp .cant{width:84px;flex:none;text-align:right;border:0;border-radius:10px;padding:9px 10px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:800}
+.desp .unidad{width:72px;flex:none}
+.pegar{display:grid;gap:8px;background:var(--limon-suave);border-radius:14px;padding:12px}
+.pegar textarea{border:0;border-radius:12px;padding:10px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:600;width:100%}
+
+/* Barra inferior y botón flotante */
+.barra{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;z-index:5}
+.barra nav{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;width:100%;max-width:560px}
+.barra button{border:0;background:none;border-radius:12px;padding:6px 2px;display:grid;justify-items:center;gap:2px;
+  font-size:.7rem;font-weight:800;color:var(--muted)}
+.barra button svg{width:24px;height:24px}
+.barra button[aria-current="page"]{color:var(--acento-txt);background:var(--acento-suave)}
+.fab{position:fixed;right:max(16px,calc(50% - 264px));bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:6;
+  box-shadow:0 6px 18px rgba(36,24,47,.25);border-radius:99px;padding-inline:20px}
+
+/* Hoja (diálogo) */
+dialog.hoja{border:0;padding:0;width:100%;max-width:560px;background:var(--card);color:var(--fg);
+  border-radius:24px 24px 0 0;margin:auto auto 0;max-height:92vh}
+dialog.hoja::backdrop{background:rgba(20,10,28,.5)}
+@media (min-width:640px){dialog.hoja{border-radius:24px;margin:auto}}
+.hoja-in{padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px));display:grid;gap:14px}
+.hoja-cab{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.hoja-cab h2{font-size:1.2rem}
+.cerrar{border:0;background:var(--bg);border-radius:50%;width:38px;height:38px;flex:none;font-size:1.3rem;line-height:1}
+.campo{display:grid;gap:6px;font-weight:800;font-size:.9rem}
+.campo input,.campo select,.campo textarea{border:0;border-radius:12px;padding:12px;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:600;font-size:1rem;width:100%}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;gap:6px;flex-wrap:wrap;border:0;padding:0;margin:0}
+.seg legend{font-weight:800;font-size:.9rem;margin-bottom:6px;padding:0}
+.seg label{flex:1 1 auto}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;text-align:center;padding:10px 8px;border-radius:12px;font-weight:800;font-size:.9rem;
+  background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line);cursor:pointer}
+.seg input:checked+span{background:var(--fg);color:var(--bg);box-shadow:none}
+.seg input:focus-visible+span{outline:3px solid var(--acento);outline-offset:2px}
+.items{display:grid;gap:8px}
+.item{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:14px;padding:8px 8px 8px 10px}
+.item .txt{flex:1;min-width:0}
+.item .t2{color:var(--muted);font-size:.85rem}
+.stepper{display:flex;align-items:center;gap:4px}
+.stepper button{width:40px;height:40px;border-radius:12px;border:0;background:var(--card);font-size:1.3rem;font-weight:800;box-shadow:inset 0 0 0 1.5px var(--line)}
+.stepper output{min-width:28px;text-align:center;font-weight:800;font-size:1.1rem;font-variant-numeric:tabular-nums}
+.total-linea{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--limon-suave);color:var(--limon-fg)}
+.total-linea input{width:9.5em;text-align:right;border:0;background:transparent;font-family:var(--f-display);font-size:1.3rem;color:inherit;padding:0}
+.acciones{display:grid;gap:8px}
+.acciones.lado{grid-template-columns:1fr 1fr}
+.detalle-num{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.detalle-num div{background:var(--bg);border-radius:14px;padding:10px 6px}
+.detalle-num span{display:block;font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.detalle-num strong{font-family:var(--f-display);font-size:.98rem}
+.nota{color:var(--muted);font-size:.86rem;margin:0}
+.aviso{background:var(--limon-suave);color:var(--limon-fg);border-radius:14px;padding:10px 12px;font-size:.88rem;margin:12px 0 0}
+
+.toast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);
+  padding:10px 16px;border-radius:12px;font-weight:800;z-index:20;max-width:calc(100% - 32px);text-align:center}
+.cargando{padding:60px 0;text-align:center;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){
+  .vista>*{animation:sube .28s ease both}
+  @keyframes sube{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="sello" aria-hidden="true"></div>
+    <div><h1>Pepita Pie</h1><p>Pies de limón y maracuyá</p></div>
+  </header>
+  <main id="vista" class="vista"><p class="cargando">Abriendo Pepita Pie…</p></main>
+</div>
+
+<button id="fab" class="btn fab" type="button" hidden></button>
+
+<div class="barra">
+  <nav aria-label="Secciones">
+    <button type="button" data-ir="inicio" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.4 6.4"/></svg>Inicio</button>
+    <button type="button" data-ir="ventas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1.5 11a2 2 0 0 1-2 1.7h-9a2 2 0 0 1-2-1.7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Ventas</button>
+    <button type="button" data-ir="compras">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2"/><circle cx="5" cy="18" r="1"/></svg>Materiales</button>
+    <button type="button" data-ir="recetas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7c0-1.5 1-2 1-3.5M12 7c0-1.5 1-2 1-3.5M16 7c0-1.5 1-2 1-3.5"/></svg>Recetas</button>
+    <button type="button" data-ir="precios">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9h8v8l-9 9z"/><circle cx="16" cy="8" r="1.5"/></svg>Precios</button>
+  </nav>
+</div>
+
+<dialog id="hoja" class="hoja"><div id="hoja-in" class="hoja-in"></div></dialog>
+<datalist id="clientes"></datalist>
+<input type="file" id="archivo-respaldo" accept=".json,application/json" hidden>
+
+<script>
+"use strict";
+/* ---------- utilidades ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pesos = n => { const v = Math.round(Number(n) || 0); return (v < 0 ? "−$" : "$") + Math.abs(v).toLocaleString("es-CL"); };
+const aNumero = s => Number(String(s ?? "").replace(/[^\d]/g, "")) || 0;
+const nuevoId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const hoy = () => iso(new Date());
+const masDias = (s, n) => { const d = aFecha(s); d.setDate(d.getDate() + n); return iso(d); };
+const num = s => { const v = parseFloat(String(s ?? "").replace(",", ".")); return isFinite(v) ? v : 0; };
+const fmtNum = n => (Math.round(n * 100) / 100).toLocaleString("es-CL");
+const aFecha = s => { if (!s) return null; const [y, m, d] = s.slice(0, 10).split("-").map(Number); return new Date(y, m - 1, d); };
+function fechaCorta(s) {
+  const f = aFecha(s); if (!f) return "";
+  const dias = Math.round((f - aFecha(hoy())) / 864e5);
+  if (dias === 0) return "hoy"; if (dias === 1) return "mañana"; if (dias === -1) return "ayer";
+  return f.toLocaleDateString("es-CL", { weekday: "short", day: "numeric", month: "short" });
+}
+const clave = s => String(s || "").trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+function toast(t, accion) {
+  document.querySelectorAll(".toast").forEach(x => x.remove());
+  const el = document.createElement("div"); el.className = "toast"; el.textContent = t; el.setAttribute("role", "status");
+  if (accion) {
+    const b = document.createElement("button"); b.type = "button"; b.className = "toast-acc"; b.textContent = accion.texto;
+    b.onclick = () => { el.remove(); accion.fn(); }; el.append(b);
+  }
+  document.body.append(el); setTimeout(() => el.remove(), accion ? 4500 : 2400);
+}
+
+/* ---------- datos ---------- */
+const COLS = ["productos", "materiales", "pedidos", "recetas", "dias", "ajustes"];
+const S = Object.fromEntries(COLS.map(c => [c, {}]));
+const LS = "libreta-pies-v1";
+let db = null, listos = new Set(), modo = "cargando";
+
+const SEMILLA = {
+  productos: [
+    { nombre: "Pie de limón (porción)", sabor: "limon", precio: 1500, orden: 1 },
+    { nombre: "Pie de maracuyá (porción)", sabor: "maracuya", precio: 1500, orden: 2 },
+    { nombre: "Pie de limón entero", sabor: "limon", precio: 12000, orden: 3 },
+    { nombre: "Pie de maracuyá entero", sabor: "maracuya", precio: 13000, orden: 4 },
+  ],
+  materiales: [
+    { nombre: "Galletas de mantequilla o de vino", cantidad: "4 paquetes", para: "ambos" },
+    { nombre: "Mantequilla", cantidad: "250 g", para: "ambos" },
+    { nombre: "Leche condensada", cantidad: "4 tarros", para: "ambos" },
+    { nombre: "Limones", cantidad: "1 kg", para: "limon" },
+    { nombre: "Pulpa de maracuyá", cantidad: "2 bolsas", para: "maracuya" },
+    { nombre: "Huevos (merengue)", cantidad: "1 docena", para: "ambos" },
+    { nombre: "Azúcar", cantidad: "1 kg", para: "ambos" },
+    { nombre: "Potes desechables con tapa", cantidad: "50", para: "otro" },
+    { nombre: "Cucharitas", cantidad: "50", para: "otro" },
+  ],
+};
+
+function guardarLocal() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch {} }
+/* Respaldo: solo cuando los datos viven en este teléfono */
+const RESP = LS + "-respaldo";
+function diasSinRespaldo() { let f = null; try { f = localStorage.getItem(RESP); } catch {} return f ? Math.round((aFecha(hoy()) - aFecha(f)) / 864e5) : null; }
+async function guardarRespaldo() {
+  const nombre = `respaldo-pepita-pie-${hoy()}.json`;
+  const archivo = new File([JSON.stringify({ app: "libreta-pies", version: 1, fecha: hoy(), datos: S })], nombre, { type: "application/json" });
+  try {
+    if (navigator.canShare?.({ files: [archivo] })) await navigator.share({ files: [archivo], title: nombre });
+    else {
+      const a = document.createElement("a"); a.href = URL.createObjectURL(archivo); a.download = nombre;
+      document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    }
+    try { localStorage.setItem(RESP, hoy()); } catch {}
+    toast("Respaldo listo"); render();
+  } catch (e) { if (e?.name !== "AbortError") toast("No se pudo guardar el respaldo."); }
+}
+async function leerRespaldo(archivo) {
+  let d = null; try { d = JSON.parse(await archivo.text()); } catch {}
+  if (d?.app !== "libreta-pies" || !d.datos) { toast("Ese archivo no es un respaldo de Pepita Pie."); return; }
+  const n = Object.keys(d.datos.pedidos || {}).length;
+  confirmar("¿Restaurar este respaldo?", `Es del ${esc(fechaCorta(d.fecha))} y tiene ${n} ${n === 1 ? "venta" : "ventas"}. Lo que tienes ahora en la app se reemplaza.`, "Restaurar", () => {
+    for (const c of COLS) S[c] = d.datos[c] || {};
+    guardarLocal(); render(); toast("Respaldo restaurado");
+  });
+}
+function cargarLocal() {
+  let d = null; try { d = JSON.parse(localStorage.getItem(LS) || "null"); } catch {}
+  // 11-10-2026: se pidió partir de cero. Lo anotado antes de esta versión eran datos de ejemplo: se borra una sola vez.
+  let yaLimpio = false; try { yaLimpio = !!localStorage.getItem(LS + "-cero"); localStorage.setItem(LS + "-cero", "1"); } catch {}
+  if (d && yaLimpio) for (const c of COLS) S[c] = d[c] || {};
+  else guardarLocal();
+}
+
+async function guardar(col, obj) {
+  S[col][obj.id] = obj; render();
+  if (db) {
+    const { id, ...cuerpo } = obj;
+    try { await db.collection(col).doc(id).set(cuerpo); }
+    catch (e) { toast(e?.code === "quota_exceeded" ? "No queda espacio: borra registros viejos." : "No se pudo guardar. Revisa tu conexión e inténtalo de nuevo."); }
+  } else guardarLocal();
+}
+async function borrar(col, id) {
+  delete S[col][id]; render();
+  if (db) { try { await db.collection(col).doc(id).delete(); } catch { toast("No se pudo borrar. Inténtalo de nuevo."); } }
+  else guardarLocal();
+}
+
+async function iniciar() {
+  try { db = window.claude?.use ? await window.claude.use("db") : null; } catch { db = null; }
+  if (!db) { modo = "local"; cargarLocal(); render(); return; }
+  modo = "nube";
+  for (const c of COLS) {
+    db.collection(c).onSnapshot(snap => {
+      const nuevo = {}; for (const d of snap.docs) nuevo[d.id] = { ...d.data(), id: d.id };
+      S[c] = nuevo; listos.add(c); render();
+    }, () => { listos.add(c); render(); });
+  }
+}
+
+/* ---------- cálculos ---------- */
+const lista = c => Object.values(S[c]);
+const productos = () => lista("productos").filter(p => p.activo !== false).sort((a, b) => (a.orden || 0) - (b.orden || 0) || a.nombre.localeCompare(b.nombre));
+const pagado = p => (p.pagos || []).reduce((s, x) => s + (Number(x.monto) || 0), 0);
+const debe = p => Math.max(0, (Number(p.total) || 0) - pagado(p));
+const resumenItems = p => (p.items || []).filter(i => i.cant > 0).map(i => `${i.cant} × ${i.nombre}`).join(", ") || "Sin detalle";
+const pedidosOrden = () => lista("pedidos").sort((a, b) => (b.fecha || "").localeCompare(a.fecha || ""));
+function saborDe(p) {
+  const s = new Set((p.items || []).filter(i => i.cant > 0).map(i => S.productos[i.pid]?.sabor || "otro"));
+  return s.size === 1 ? [...s][0] : s.size ? "ambos" : "otro";
+}
+function totales() {
+  const ped = lista("pedidos"), mat = lista("materiales");
+  const cobrado = ped.reduce((s, p) => s + pagado(p), 0);
+  const porCobrar = ped.reduce((s, p) => s + debe(p), 0);
+  const gastado = mat.filter(m => m.estado === "comprado").reduce((s, m) => s + (Number(m.costo) || 0), 0);
+  const vendido = ped.reduce((s, p) => s + (Number(p.total) || 0), 0);
+  const antes = plataAntes().reduce((s, x) => s + (Number(x.monto) || 0), 0);   // ganado antes de usar la app
+  return { cobrado: cobrado + antes, antes, porCobrar, gastado, vendido, ganancia: cobrado + antes - gastado };
+}
+const plataAntes = () => S.ajustes.antes?.items || [];
+function deudores() {
+  const g = new Map();
+  for (const p of lista("pedidos")) {
+    const d = debe(p); if (!d) continue;
+    const k = clave(p.cliente);
+    if (!g.has(k)) g.set(k, { nombre: p.cliente, total: 0, pedidos: [] });
+    const e = g.get(k); e.total += d; e.pedidos.push(p);
+  }
+  return [...g.values()].sort((a, b) => b.total - a.total);
+}
+/* Lo que llevó hoy y lo que le queda */
+const fechaVenta = p => p.entregado || p.fecha;
+const llevadoHoy = () => S.dias[hoy()]?.llevado || {};
+function vendidoHoyDe(pid) {
+  let n = 0;
+  for (const p of lista("pedidos")) if (p.estado !== "reserva" && fechaVenta(p) === hoy()) for (const i of p.items || []) if (i.pid === pid) n += i.cant;
+  return n;
+}
+function quedan(pid) { const l = llevadoHoy()[pid]; return l == null ? null : l - vendidoHoyDe(pid); }
+
+/* Recetas: costo de cada ingrediente = lo que usas / lo que trae el envase × lo que cuesta el envase */
+const costoIng = g => Number(g.viene) > 0 ? Number(g.usas) / Number(g.viene) * Number(g.cuesta) || 0 : 0;
+const piesDe = r => Math.max(1, Number(r.pies) || 1);                 // la receta alcanza para tantos pies
+const usoPorPie = (g, r) => (Number(g.usas) || 0) / piesDe(r);
+const costoTanda = r => (r.ingredientes || []).reduce((t, g) => t + costoIng(g), 0);
+const costoReceta = r => costoTanda(r) / piesDe(r);                  // costo de UN pie
+const costoPorcion = r => costoReceta(r) / Math.max(1, Number(r.rinde) || 1);
+/* Lo que tiene en casa: ajustes/despensa → { "nombre|unidad": cantidad } */
+const claveIng = g => clave(g.nombre) + "|" + clave(g.unidad);
+const despensa = () => S.ajustes.despensa?.items || {};
+function alcanzaPara(r) {
+  const d = despensa(); let min = Infinity, limita = null;
+  for (const g of r.ingredientes || []) {
+    const uso = usoPorPie(g, r); if (!g.nombre || !uso) continue;
+    const n = Math.floor((Number(d[claveIng(g)]) || 0) / uso + 1e-9);
+    if (n < min) { min = n; limita = g; }
+  }
+  if (min === Infinity) return null;
+  const falta = limita ? Math.max(0, usoPorPie(limita, r) * (min + 1) - (Number(d[claveIng(limita)]) || 0)) : 0;
+  return { pies: min, limita, falta };
+}
+function ingredientesUnicos() {
+  const m = new Map();
+  for (const r of lista("recetas")) for (const g of r.ingredientes || []) if (g.nombre && !m.has(claveIng(g))) m.set(claveIng(g), { nombre: g.nombre, unidad: g.unidad || "" });
+  return [...m.entries()].sort((a, b) => a[1].nombre.localeCompare(b[1].nombre));
+}
+/* Pegar una receta escrita: "200 g de galletas", "1 tarro leche condensada", "3 huevos" */
+const UNIDADES = [[/^(kg|kilos?|kilogramos?)$/, "kg"], [/^(g|gr|grs|gramos?)$/, "g"], [/^(ml|cc|mililitros?)$/, "ml"], [/^(l|lt|litros?)$/, "l"],
+  [/^tazas?$/, "taza"], [/^(cucharadas?|cdas?)$/, "cucharada"], [/^(cucharaditas?|cdtas?|cditas?)$/, "cucharadita"], [/^(tarros?|latas?)$/, "tarro"],
+  [/^paquetes?$/, "paquete"], [/^(unidades?|u|un)$/, "unidad"], [/^(sobres?)$/, "sobre"], [/^(pizcas?)$/, "pizca"]];
+function leerLinea(linea) {
+  let t = linea.replace(/^[\s\-•*·]+/, "").trim(); if (!t) return null;
+  t = t.replace(/½/g, " 1/2").replace(/¼/g, " 1/4").replace(/¾/g, " 3/4").replace(/^medi[oa]\b/i, "1/2").replace(/\s+/g, " ").trim();
+  const m = t.match(/^(\d+ \d+\/\d+|\d+\/\d+|\d+(?:[.,]\d+)?)\s*(.*)$/);
+  let usas = "", resto = t;
+  if (m) { usas = m[1].split(/\s+/).reduce((s, x) => s + (x.includes("/") ? x.split("/")[0] / x.split("/")[1] : num(x)), 0); resto = m[2]; }
+  let unidad = "";
+  const pal = resto.match(/^([a-záéíóúñ]+)\.?\s*(.*)$/i);
+  if (pal) { const u = UNIDADES.find(([re]) => re.test(pal[1].toLowerCase())); if (u) { unidad = u[1]; resto = pal[2]; } }
+  resto = resto.replace(/^de\s+/i, "").trim();
+  if (!unidad && usas !== "") unidad = "unidad";
+  const nombre = resto.charAt(0).toUpperCase() + resto.slice(1);
+  return nombre ? { nombre, usas, unidad } : null;
+}
+function costoProducto(p) { const r = S.recetas[p.receta]; return r ? (p.tipo === "entero" ? costoReceta(r) : costoPorcion(r)) : null; }
+const sugerido = c => Math.ceil(c * 2 / 100) * 100;   // ganar al menos lo mismo que cuesta
+function calcularCompras(pies) {
+  const m = new Map();
+  for (const [rid, n] of Object.entries(pies)) {
+    const r = S.recetas[rid]; if (!r || !n) continue;
+    for (const g of r.ingredientes || []) {
+      if (!g.nombre) continue;
+      const k = clave(g.nombre) + "|" + clave(g.unidad);
+      const e = m.get(k) || { nombre: g.nombre, unidad: g.unidad || "", viene: Number(g.viene) || 0, cuesta: Number(g.cuesta) || 0, usar: 0, sabores: new Set() };
+      e.usar += usoPorPie(g, r) * n; e.sabores.add(r.sabor || "otro"); m.set(k, e);
+    }
+  }
+  const d = despensa();
+  return [...m.entries()].map(([k, e]) => {
+    e.tienes = Number(d[k]) || 0; e.comprar = Math.max(0, e.usar - e.tienes);
+    return e;
+  }).filter(e => e.comprar > 0).map(e => {
+    const paq = e.viene > 0 ? Math.ceil(e.comprar / e.viene - 1e-9) : null;
+    const cantidad = paq == null ? `${fmtNum(e.comprar)} ${e.unidad}`.trim() : e.viene === 1 ? `${paq} ${e.unidad}`.trim() : `${paq} × ${fmtNum(e.viene)} ${e.unidad}`.trim();
+    return { ...e, paq, cantidad, costo: paq == null ? 0 : paq * e.cuesta, para: e.sabores.size === 1 ? [...e.sabores][0] : "ambos" };
+  });
+}
+/* Cuántos pies hay que hacer para unas reservas */
+function piesPara(peds) {
+  const porReceta = {};
+  for (const p of peds) for (const i of p.items || []) {
+    const pr = S.productos[i.pid], r = pr && S.recetas[pr.receta]; if (!r || !i.cant) continue;
+    porReceta[r.id] = (porReceta[r.id] || 0) + (pr.tipo === "entero" ? i.cant : i.cant / Math.max(1, Number(r.rinde) || 1));
+  }
+  return Object.entries(porReceta).map(([rid, n]) => `${Math.ceil(n - 1e-9)} ${Math.ceil(n - 1e-9) === 1 ? "pie" : "pies"} de ${S.recetas[rid].nombre.replace(/^pie de /i, "")}`);
+}
+
+const icoSabor = s => `<span class="pie-ico ${s}" aria-hidden="true">${s === "otro" ? "•" : ""}</span>`;
+const nombreSabor = { limon: "Limón", maracuya: "Maracuyá", ambos: "Para los dos", otro: "Envases y otros" };
+
+/* ---------- vistas ---------- */
+let vista = "inicio", filtro = "todas", busqueda = "";
+try { vista = localStorage.getItem(LS + "-vista") || "inicio"; } catch {}
+
+function filaPedido(p) {
+  const d = debe(p);
+  const estado = p.estado === "reserva"
+    ? `<span class="chip reserva">Reserva${p.para ? " · " + esc(fechaCorta(p.para)) : ""}</span>`
+    : `<span class="chip neutro">Entregado</span>`;
+  const pago = d ? `<span class="chip debe">Debe ${pesos(d)}</span>` : `<span class="chip ok">Pagado</span>`;
+  return `<button type="button" class="fila" data-acc="ver-pedido" data-id="${p.id}">
+    ${icoSabor(saborDe(p))}
+    <span class="txt"><span class="t1">${esc(p.cliente)}</span><br><span class="t2">${esc(resumenItems(p))} · ${esc(fechaCorta(p.fecha))}</span></span>
+    <span class="der"><span class="monto">${pesos(p.total)}</span>${estado}${pago}</span></button>`;
+}
+
+function htmlMeta(t) {
+  const m = S.ajustes.meta;
+  if (!m?.monto) return `<button type="button" class="meta-vacia" data-acc="editar-meta">＋ Ponerte una meta de ahorro</button>`;
+  const llevas = Math.max(0, t.ganancia), pct = Math.min(100, Math.round(llevas / m.monto * 100));
+  return `<button type="button" class="meta" data-acc="editar-meta">
+    <span class="meta-txt"><strong>${esc(m.nombre || "Mi meta")}</strong><span class="num">${pesos(llevas)} de ${pesos(m.monto)}</span></span>
+    <span class="meta-barra" role="progressbar" aria-label="Avance de la meta" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></span>
+    <span class="t2">${pct >= 100 ? "¡Meta cumplida!" : `Te faltan ${pesos(m.monto - llevas)} · llevas el ${pct} %`}</span></button>`;
+}
+
+function htmlRapida() {
+  const prods = productos();
+  if (!prods.length) return `<section class="sec"><div class="lista"><div class="vacio"><strong>Agrega lo que vendes</strong>Pon tus pies y sus precios en «Precios» para empezar a vender.
+    <br><button type="button" class="btn chico" data-ir="precios">Ir a Precios</button></div></div></section>`;
+  const hay = Object.keys(llevadoHoy()).length > 0;
+  return `<section class="sec">
+    <div class="sec-cab"><h2>Venta rápida</h2><button type="button" class="link" data-acc="llevado">${hay ? "Editar lo que llevé" : "Anotar lo que llevé hoy"}</button></div>
+    <div class="rapida">${prods.map(p => { const q = quedan(p.id); return `
+      <button type="button" class="rap${q !== null && q <= 0 ? " agotado" : ""}" data-acc="rapida" data-id="${p.id}" aria-label="Vender 1 ${esc(p.nombre)} pagado">
+        ${icoSabor(p.sabor || "otro")}<span class="rap-txt"><span class="rap-n">${esc(p.nombre)}</span><span class="rap-p num">+1 · ${pesos(p.precio)}</span></span>
+        ${q === null ? "" : `<span class="rap-q num">${q <= 0 ? "Agotado" : `Quedan ${q}`}</span>`}</button>`; }).join("")}</div>
+    <p class="nota" style="margin-top:6px">Un toque = 1 vendido y pagado, sin anotar el nombre.${hay ? "" : " Si anotas lo que llevaste, te muestra cuánto te queda."}</p>
+  </section>`;
+}
+
+function htmlPreparar() {
+  const pend = lista("pedidos").filter(p => p.estado === "reserva" && p.para);
+  const grupos = [
+    ["Atrasadas", p => p.para < hoy()], ["Para hoy", p => p.para === hoy()], ["Para mañana", p => p.para === masDias(hoy(), 1)],
+  ].map(([t, f]) => {
+    const ps = pend.filter(f), c = {};
+    for (const p of ps) for (const i of p.items || []) if (i.cant) c[i.nombre] = (c[i.nombre] || 0) + i.cant;
+    return { t, ps, c, pies: piesPara(ps) };
+  }).filter(g => g.ps.length);
+  if (!grupos.length) return "";
+  return `<section class="sec"><div class="sec-cab"><h2>Qué preparar</h2></div>
+    <div class="lista">${grupos.map(g => `<div class="fila"><span class="txt">
+      <span class="t1">${g.t}${g.pies.length ? ": hacer " + esc(g.pies.join(" y ")) : ""}</span><br>
+      <span class="t2">${Object.entries(g.c).map(([n, k]) => `${k} × ${esc(n)}`).join(" · ")}</span><br>
+      <span class="t2">${g.ps.length} ${g.ps.length === 1 ? "reserva" : "reservas"}: ${g.ps.map(p => esc(p.cliente)).join(", ")}</span></span></div>`).join("")}</div>
+  </section>`;
+}
+
+function vInicio() {
+  const t = totales();
+  const reservas = lista("pedidos").filter(p => p.estado === "reserva").sort((a, b) => (a.para || "9").localeCompare(b.para || "9"));
+  const deu = deudores();
+  const faltan = lista("materiales").filter(m => m.estado !== "comprado");
+  return `
+  <section class="caja" aria-label="Caja">
+    <div><div class="eti">Plata que ya recibiste</div><div class="grande num">${pesos(t.cobrado)}</div>
+      ${t.antes ? `<button type="button" class="eti-antes num" data-acc="plata-antes">incluye ${pesos(t.antes)} de antes de la app ›</button>` : ""}</div>
+    <div class="tres">
+      <div><span class="eti">Te deben</span><strong class="num">${pesos(t.porCobrar)}</strong></div>
+      <div><span class="eti">Gastado</span><strong class="num">${pesos(t.gastado)}</strong></div>
+      <div><span class="eti">Ganancia</span><strong class="num">${pesos(t.ganancia)}</strong></div>
+    </div>
+  </section>
+  ${htmlMeta(t)}
+  ${t.antes ? "" : `<button type="button" class="meta-vacia" data-acc="plata-antes">＋ Anotar lo que ganaste antes de usar la app</button>`}
+  <div class="rapidas">
+    <button type="button" class="btn" data-acc="nueva-venta">Vender</button>
+    <button type="button" class="btn limon" data-acc="nueva-reserva">Anotar reserva</button>
+  </div>
+  ${modo === "local" && lista("pedidos").length && (diasSinRespaldo() ?? 99) >= 7 ? `<p class="aviso">${diasSinRespaldo() === null ? "Todavía no guardas un respaldo" : `Hace ${diasSinRespaldo()} días que no guardas un respaldo`}: si pierdes el teléfono, pierdes tus ventas.
+    <button type="button" class="btn chico limon" style="margin-top:8px" data-acc="respaldo">Guardar respaldo</button></p>` : ""}
+  ${htmlRapida()}
+  ${htmlPreparar()}
+
+  <section class="sec">
+    <div class="sec-cab"><h2>Reservas por entregar</h2><span class="nota">${reservas.length}</span></div>
+    <div class="lista">${reservas.length ? reservas.map(p => `
+      <div class="fila">${icoSabor(saborDe(p))}
+        <button type="button" class="txt" style="all:unset;flex:1;min-width:0;cursor:pointer" data-acc="ver-pedido" data-id="${p.id}">
+          <span class="t1">${esc(p.cliente)}</span><br>
+          <span class="t2">${esc(resumenItems(p))}${p.para ? " · para " + esc(fechaCorta(p.para)) : ""}${debe(p) ? " · debe " + pesos(debe(p)) : " · pagado"}</span></button>
+        <button type="button" class="btn chico suave" data-acc="entregar" data-id="${p.id}">Entregar</button></div>`).join("")
+      : `<div class="vacio"><strong>No tienes reservas pendientes</strong>Cuando alguien te encargue un pie, anótalo con «Anotar reserva».</div>`}</div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-cab"><h2>Te deben</h2><span class="nota num">${pesos(t.porCobrar)}</span></div>
+    <div class="lista">${deu.length ? deu.map(d => `
+      <div class="fila"><span class="txt"><span class="t1">${esc(d.nombre)}</span><br><span class="t2">${d.pedidos.length} ${d.pedidos.length === 1 ? "compra" : "compras"} sin pagar completo</span></span>
+        <span class="monto" style="color:var(--malo)">${pesos(d.total)}</span>
+        <button type="button" class="btn chico" data-acc="cobrar" data-k="${esc(clave(d.nombre))}">Cobrar</button></div>`).join("")
+      : `<div class="vacio"><strong>Nadie te debe</strong>Todo lo vendido está pagado.</div>`}</div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-cab"><h2>Te falta comprar</h2><button type="button" class="link" data-ir="compras">Ver todo</button></div>
+    <div class="lista">${faltan.length ? faltan.slice(0, 5).map(m => `
+      <div class="fila">${icoSabor(m.para || "otro")}<span class="txt"><span class="t1">${esc(m.nombre)}</span><br><span class="t2">${esc(m.cantidad || "")}</span></span>
+        <button type="button" class="check" aria-label="Marcar ${esc(m.nombre)} como comprado" data-acc="comprar" data-id="${m.id}"></button></div>`).join("")
+      + (faltan.length > 5 ? `<button type="button" class="fila" data-ir="compras"><span class="txt t2">y ${faltan.length - 5} más…</span></button>` : "")
+      : `<div class="vacio"><strong>Tienes todo comprado</strong>Anota en Materiales lo que necesites, o calcula la compra en «Recetas».</div>`}</div>
+  </section>`;
+}
+
+let subVentas = "lista", diaSel = null;
+function vVentas() {
+  const pest = `<div class="pestanas" role="tablist" aria-label="Ver">
+    <button type="button" role="tab" data-sub="lista" aria-selected="${subVentas === "lista"}">Lista</button>
+    <button type="button" role="tab" data-sub="resumen" aria-selected="${subVentas === "resumen"}">Resumen</button></div>`;
+  return pest + (subVentas === "resumen" ? vResumen() : vLista());
+}
+function vResumen() {
+  const peds = lista("pedidos"), H = hoy();
+  const lunes = masDias(H, -((aFecha(H).getDay() + 6) % 7)), mes = H.slice(0, 8) + "01";
+  const vendidoEn = (a, b) => peds.filter(p => p.fecha >= a && p.fecha <= b).reduce((t, p) => t + (Number(p.total) || 0), 0);
+  const cobradoEn = (a, b) => peds.reduce((t, p) => t + (p.pagos || []).filter(x => x.fecha >= a && x.fecha <= b).reduce((u, x) => u + x.monto, 0), 0);
+  const tile = (t, a) => `<div><span>${t}</span><strong class="num">${pesos(vendidoEn(a, H))}</strong><em class="num">cobrado ${pesos(cobradoEn(a, H))}</em></div>`;
+  if (!peds.length) return `<div class="lista"><div class="vacio"><strong>Todavía no hay ventas</strong>Cuando vendas, aquí verás cuánto vendes por día y semana, qué sabor sale más y quién te compra más.</div></div>`;
+  // últimos 7 días
+  const dias = Array.from({ length: 7 }, (_, k) => masDias(H, k - 6)).map(f => ({ f, v: vendidoEn(f, f) }));
+  const max = Math.max(1, ...dias.map(d => d.v));
+  const sel = dias.find(d => d.f === diaSel) || dias[6];
+  const nombreDia = f => aFecha(f).toLocaleDateString("es-CL", { weekday: "short" }).replace(".", "");
+  // por sabor y por producto
+  const porSabor = {}, porProd = {};
+  for (const p of peds) for (const i of p.items || []) {
+    if (!i.cant) continue;
+    const sab = S.productos[i.pid]?.sabor || "otro", m = i.cant * (i.precio || 0);
+    porSabor[sab] = porSabor[sab] || { m: 0, u: 0 }; porSabor[sab].m += m; porSabor[sab].u += i.cant;
+    const k = i.pid || i.nombre; porProd[k] = porProd[k] || { nombre: i.nombre, cant: 0, monto: 0 }; porProd[k].cant += i.cant; porProd[k].monto += m;
+  }
+  const sabores = Object.entries(porSabor).sort((a, b) => b[1].m - a[1].m), maxS = Math.max(1, ...sabores.map(x => x[1].m));
+  const prods = Object.values(porProd).sort((a, b) => b.monto - a.monto);
+  // mejores clientes
+  const cli = new Map();
+  for (const p of peds) { if (p.rapida || !p.cliente) continue; const k = clave(p.cliente); const e = cli.get(k) || { nombre: p.cliente, total: 0, n: 0 }; e.total += Number(p.total) || 0; e.n++; cli.set(k, e); }
+  const top = [...cli.values()].sort((a, b) => b.total - a.total).slice(0, 5);
+  return `
+  <div class="resumen-linea tres-tiles">${tile("Hoy", H)}${tile("Esta semana", lunes)}${tile("Este mes", mes)}</div>
+  <section class="sec" style="margin-top:14px">
+    <div class="sec-cab"><h2>Últimos 7 días</h2><span class="nota num">${esc(fechaCorta(sel.f))}: ${pesos(sel.v)}</span></div>
+    <div class="lista grafico-caja">
+      <div class="grafico" role="group" aria-label="Vendido por día">${dias.map(d => `
+        <button type="button" class="col" data-dia="${d.f}" aria-pressed="${d.f === sel.f}" aria-label="${esc(fechaCorta(d.f))}: ${pesos(d.v)}" title="${esc(fechaCorta(d.f))}: ${pesos(d.v)}">
+          <span class="val num">${d.f === sel.f || (d.v === max && d.v > 0) ? pesos(d.v) : ""}</span>
+          <span class="b" style="height:${d.v ? Math.max(3, d.v / max * 100) : 0}%"></span>
+          <span class="dia">${d.f === H ? "hoy" : esc(nombreDia(d.f))}</span></button>`).join("")}</div>
+      <p class="nota" style="padding:0 14px 12px">Toca un día para ver cuánto vendiste.</p>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="sec-cab"><h2>Qué sabor se vende más</h2></div>
+    <div class="lista" style="padding:12px 14px;display:grid;gap:12px">${sabores.map(([sab, x]) => `
+      <div class="hfila"><div class="hfila-cab">${icoSabor(sab)}<strong>${esc({ limon: "Limón", maracuya: "Maracuyá" }[sab] || "Otros")}</strong>
+        <span class="num">${x.u} u. · ${pesos(x.m)}</span></div>
+        <div class="hbarra"><span class="${sab}" style="width:${x.m / maxS * 100}%"></span></div></div>`).join("")}</div>
+  </section>
+  <section class="sec">
+    <div class="sec-cab"><h2>Por producto</h2></div>
+    <div class="lista"><table class="tabla-prod"><tbody>${prods.map(v => `<tr><td>${esc(v.nombre)}</td><td>${v.cant} u.</td><td>${pesos(v.monto)}</td></tr>`).join("")}</tbody></table></div>
+  </section>
+  <section class="sec">
+    <div class="sec-cab"><h2>Quién te compra más</h2></div>
+    <div class="lista">${top.length ? top.map((c, k) => `<div class="fila"><span class="pos num">${k + 1}</span>
+      <span class="txt"><span class="t1">${esc(c.nombre)}</span><br><span class="t2">${c.n} ${c.n === 1 ? "compra" : "compras"}</span></span><span class="monto">${pesos(c.total)}</span></div>`).join("")
+      : `<div class="vacio">Las ventas rápidas no llevan nombre. Cuando anotes ventas con nombre, aparecen aquí.</div>`}</div>
+  </section>`;
+}
+function vLista() {
+  const q = clave(busqueda);
+  const todas = pedidosOrden();
+  const f = todas.filter(p =>
+    (filtro === "todas" || (filtro === "reservas" && p.estado === "reserva") || (filtro === "entregadas" && p.estado !== "reserva") || (filtro === "deben" && debe(p) > 0))
+    && (!q || clave(p.cliente).includes(q) || clave(resumenItems(p)).includes(q)));
+  const n = k => todas.filter(p => k === "reservas" ? p.estado === "reserva" : k === "entregadas" ? p.estado !== "reserva" : k === "deben" ? debe(p) > 0 : true).length;
+  const b = (k, t) => `<button type="button" data-filtro="${k}" aria-pressed="${filtro === k}">${t} ${n(k)}</button>`;
+  return `
+  <div class="filtros" role="group" aria-label="Filtrar ventas">${b("todas","Todas")}${b("reservas","Reservas")}${b("entregadas","Entregadas")}${b("deben","Deben")}</div>
+  <input id="buscar" class="buscar" type="search" placeholder="Buscar por nombre o producto" value="${esc(busqueda)}" aria-label="Buscar">
+  <div class="lista">${f.length ? f.map(filaPedido).join("") :
+    `<div class="vacio"><strong>${todas.length ? "No hay ventas con ese filtro" : "Aún no anotas ventas"}</strong>${todas.length ? "Prueba con otro filtro o búsqueda." : "Cada venta o reserva que anotes aparece aquí."}</div>`}</div>`;
+}
+
+function vCompras() {
+  const mat = lista("materiales");
+  const faltan = mat.filter(m => m.estado !== "comprado").sort((a, b) => a.nombre.localeCompare(b.nombre));
+  const comprados = mat.filter(m => m.estado === "comprado").sort((a, b) => (b.fecha || "").localeCompare(a.fecha || ""));
+  const gastado = comprados.reduce((s, m) => s + (Number(m.costo) || 0), 0);
+  return `
+  <div class="resumen-linea">
+    <div><span>Gastado en materiales</span><strong class="num">${pesos(gastado)}</strong></div>
+    <div><span>Te falta comprar</span><strong class="num">${faltan.length} ${faltan.length === 1 ? "cosa" : "cosas"}</strong></div>
+  </div>
+  <section class="sec" style="margin-top:8px">
+    <div class="sec-cab"><h2>Por comprar</h2>${faltan.length ? `<button type="button" class="link" data-acc="copiar-lista">Copiar lista</button>` : ""}</div>
+    <div class="lista">${faltan.length ? faltan.map(m => `
+      <div class="fila">
+        <button type="button" class="check" aria-label="Marcar ${esc(m.nombre)} como comprado" data-acc="comprar" data-id="${m.id}"></button>
+        <button type="button" class="txt" style="all:unset;flex:1;min-width:0;cursor:pointer" data-acc="editar-material" data-id="${m.id}">
+          <span class="t1">${esc(m.nombre)}</span><br><span class="t2">${esc([m.cantidad, nombreSabor[m.para]].filter(Boolean).join(" · "))}</span></button>
+        ${icoSabor(m.para || "otro")}</div>`).join("")
+      : `<div class="vacio"><strong>No te falta nada</strong>Anota aquí lo que tienes que comprar para la próxima tanda.
+        ${mat.length ? "" : `<br><button type="button" class="btn suave chico" data-acc="lista-tipica">Cargar ingredientes típicos</button>`}</div>`}</div>
+  </section>
+  <section class="sec">
+    <div class="sec-cab"><h2>Ya comprado</h2><span class="nota num">${pesos(gastado)}</span></div>
+    <div class="lista">${comprados.length ? comprados.map(m => `
+      <button type="button" class="fila" data-acc="editar-material" data-id="${m.id}">
+        <span class="check si" aria-hidden="true">✓</span>
+        <span class="txt"><span class="t1">${esc(m.nombre)}</span><br><span class="t2">${esc([m.cantidad, fechaCorta(m.fecha)].filter(Boolean).join(" · "))}</span></span>
+        <span class="monto">${pesos(m.costo)}</span></button>`).join("")
+      : `<div class="vacio"><strong>Todavía no marcas compras</strong>Toca el círculo de un material cuando lo compres y anota cuánto pagaste.</div>`}</div>
+  </section>`;
+}
+
+function vRecetas() {
+  const rs = lista("recetas").sort((a, b) => a.nombre.localeCompare(b.nombre));
+  const prods = lista("productos").filter(p => S.recetas[p.receta]).sort((a, b) => (a.orden || 0) - (b.orden || 0));
+  return `
+  <section>
+    <div class="sec-cab"><h2>Tus recetas</h2></div>
+    <div class="lista">${rs.length ? rs.map(r => `
+      <button type="button" class="fila" data-acc="editar-receta" data-id="${r.id}">${icoSabor(r.sabor || "otro")}
+        <span class="txt"><span class="t1">${esc(r.nombre)}</span><br><span class="t2">${(r.ingredientes || []).length} ingredientes · ${piesDe(r) > 1 ? `alcanza para ${piesDe(r)} pies · ` : ""}${r.rinde || 1} porciones c/u</span></span>
+        <span class="der"><span class="monto">${pesos(costoReceta(r))}</span><span class="t2 num">el pie · ${pesos(costoPorcion(r))} la porción</span></span></button>`).join("")
+      : `<div class="vacio"><strong>Anota qué lleva cada pie</strong>Con la receta y lo que pagas por cada cosa, la app calcula cuánto te cuesta cada pie y cada porción, y cuánto comprar.
+        <br><button type="button" class="btn chico" data-acc="nueva-receta">Crear mi primera receta</button></div>`}</div>
+  </section>
+  ${rs.length ? `<section class="sec">
+    <div class="sec-cab"><h2>Con lo que tienes en casa</h2><button type="button" class="link" data-acc="despensa">${Object.keys(despensa()).length ? "Actualizar" : "Anotar lo que tengo"}</button></div>
+    <div class="lista">${Object.keys(despensa()).length ? rs.map(r => { const a = alcanzaPara(r); return `
+      <div class="fila">${icoSabor(r.sabor || "otro")}<span class="txt"><span class="t1">${esc(r.nombre)}</span><br>
+        <span class="t2">${!a ? "La receta no tiene cantidades" : a.limita ? `Lo que más te limita: ${esc(a.limita.nombre.toLowerCase())}. Para 1 pie más te faltan ${fmtNum(a.falta)} ${esc(a.limita.unidad)}` : ""}</span></span>
+        <span class="alcanza num"><strong>${a ? a.pies : 0}</strong>${a?.pies === 1 ? "pie" : "pies"}</span></div>`; }).join("")
+      : `<div class="vacio"><strong>¿Cuántos pies te alcanzan?</strong>Anota cuánto tienes de cada ingrediente y la app calcula cuántos pies puedes hacer.
+        <br><button type="button" class="btn chico" data-acc="despensa">Anotar lo que tengo</button></div>`}</div>
+    ${Object.keys(despensa()).length && rs.length > 1 ? `<p class="nota" style="margin-top:8px">Cada número es si haces solo de ese sabor: los dos comparten ingredientes.</p>` : ""}
+  </section>
+  <section class="sec">
+    <div class="sec-cab"><h2>¿Cuánto comprar?</h2></div>
+    <div class="lista" style="padding:14px;display:grid;gap:10px"><span>Dime cuántos pies vas a hacer y te armo la lista de compras, descontando lo que ya tienes en casa.</span>
+      <button type="button" class="btn" data-acc="calcular-compras">Calcular compras</button></div>
+  </section>
+  <section class="sec">
+    <div class="sec-cab"><h2>¿Te conviene?</h2></div>
+    <div class="lista">${prods.length ? prods.map(p => { const c = costoProducto(p), g = p.precio - c; return `
+      <button type="button" class="fila" data-acc="editar-producto" data-id="${p.id}">${icoSabor(p.sabor || "otro")}
+        <span class="txt"><span class="t1">${esc(p.nombre)}</span><br><span class="t2 num">Te cuesta ${pesos(c)} · lo vendes a ${pesos(p.precio)}</span>
+        ${g < c ? `<br><span class="t2 num">Precio sugerido: ${pesos(sugerido(c))}</span>` : ""}</span>
+        <span class="der"><span class="chip ${g > 0 ? "ok" : "debe"} num">${g > 0 ? "Ganas" : "Pierdes"} ${pesos(Math.abs(g))}</span></span></button>`; }).join("")
+      : `<div class="vacio">En «Precios», abre cada producto y elige de qué receta sale. Aquí verás cuánto ganas con cada uno.</div>`}</div>
+    <p class="nota" style="margin-top:8px">El precio sugerido es para ganar al menos lo mismo que te cuesta hacerlo.</p>
+  </section>` : ""}`;
+}
+
+function vPrecios() {
+  const prods = lista("productos").sort((a, b) => (a.orden || 0) - (b.orden || 0));
+  const t = totales();
+  return `
+  <section>
+    <div class="sec-cab"><h2>Tus productos</h2></div>
+    <div class="lista">${prods.length ? prods.map(p => `
+      <button type="button" class="fila" data-acc="editar-producto" data-id="${p.id}">${icoSabor(p.sabor || "otro")}
+        <span class="txt"><span class="t1">${esc(p.nombre)}</span>${costoProducto(p) !== null ? `<br><span class="t2 num">Te cuesta ${pesos(costoProducto(p))} · ganas ${pesos(p.precio - costoProducto(p))}</span>` : ""}${p.activo === false ? `<br><span class="t2">Oculto al vender</span>` : ""}</span>
+        <span class="monto">${pesos(p.precio)}</span></button>`).join("")
+      : `<div class="vacio"><strong>Aún no hay productos</strong>Agrega lo que vendes con su precio.<br>
+         <button type="button" class="btn suave chico" data-acc="productos-tipicos">Agregar pie de limón y de maracuyá</button></div>`}</div>
+    <p class="nota" style="margin-top:8px">Si cambias un precio, las ventas que ya anotaste quedan con el precio de ese momento.</p>
+  </section>
+  <section class="sec">
+    <div class="sec-cab"><h2>Cuentas claras</h2></div>
+    <div class="lista"><table class="tabla-prod"><tbody>
+      <tr><td>Vendido (incluye reservas)</td><td></td><td>${pesos(t.vendido)}</td></tr>
+      <tr><td>Recibido en la app</td><td></td><td>${pesos(t.cobrado - t.antes)}</td></tr>
+      <tr><td>Ganado antes de la app <button type="button" class="link-chico" data-acc="plata-antes">${t.antes ? "Ver" : "Anotar"}</button></td><td></td><td>${pesos(t.antes)}</td></tr>
+      <tr><td>Por cobrar</td><td></td><td>${pesos(t.porCobrar)}</td></tr>
+      <tr><td>Gastado en materiales</td><td></td><td>− ${pesos(t.gastado)}</td></tr>
+      <tr><td><strong>Ganancia hasta hoy</strong></td><td></td><td><strong>${pesos(t.ganancia)}</strong></td></tr>
+      <tr><td>Ganancia si te pagan todo</td><td></td><td>${pesos(t.ganancia + t.porCobrar)}</td></tr>
+    </tbody></table></div>
+    <p class="nota" style="margin-top:8px">${modo === "nube" ? "Tus datos se guardan en tu cuenta de Claude: los ves igual desde el teléfono o el computador." : "Tus datos se guardan solo en este teléfono. Guarda un respaldo de vez en cuando para no perderlos."}</p>
+  </section>
+  <section class="sec">
+    <button type="button" class="btn borde chico" style="color:var(--malo);width:100%" data-acc="borrar-todo">Borrar todo y empezar de cero</button>
+  </section>
+  ${modo === "local" ? `<section class="sec">
+    <div class="sec-cab"><h2>Respaldo</h2><span class="nota">${diasSinRespaldo() === null ? "nunca" : diasSinRespaldo() === 0 ? "hoy" : `hace ${diasSinRespaldo()} días`}</span></div>
+    <div class="acciones lado"><button type="button" class="btn suave" data-acc="respaldo">Guardar respaldo</button>
+      <button type="button" class="btn borde" data-acc="restaurar">Restaurar</button></div>
+    <p class="nota" style="margin-top:8px">En el iPhone elige «Guardar en Archivos». Con ese archivo recuperas todo en otro teléfono.</p>
+  </section>` : ""}`;
+}
+
+const FAB = { inicio: ["＋ Venta", "nueva-venta"], ventas: ["＋ Venta", "nueva-venta"], compras: ["＋ Material", "nuevo-material"], recetas: ["＋ Receta", "nueva-receta"], precios: ["＋ Producto", "nuevo-producto"] };
+function render() {
+  if (modo === "cargando" || (modo === "nube" && listos.size < COLS.length)) return;
+  const main = $("#vista");
+  const foco = document.activeElement?.id === "buscar" ? document.activeElement.selectionStart : null;
+  main.innerHTML = ({ inicio: vInicio, ventas: vVentas, compras: vCompras, recetas: vRecetas, precios: vPrecios }[vista] || vInicio)();
+  if (foco !== null) { const b = $("#buscar"); b.focus(); b.setSelectionRange(foco, foco); }
+  document.querySelectorAll(".barra [data-ir]").forEach(b => b.toggleAttribute("aria-current", false) || (b.dataset.ir === vista && b.setAttribute("aria-current", "page")));
+  const [t, a] = FAB[vista]; const fab = $("#fab"); fab.textContent = t; fab.dataset.acc = a; fab.hidden = false;
+  $("#clientes").innerHTML = [...new Set(lista("pedidos").filter(p => !p.rapida).map(p => p.cliente).filter(Boolean))].map(c => `<option value="${esc(c)}">`).join("");
+}
+function ir(v) {
+  vista = v; try { localStorage.setItem(LS + "-vista", v); } catch {}
+  const main = $("#vista"); main.classList.remove("vista"); void main.offsetWidth; main.classList.add("vista");
+  render(); window.scrollTo(0, 0);
+}
+
+/* ---------- hoja ---------- */
+const hoja = $("#hoja"), hojaIn = $("#hoja-in");
+function abrir(html, alMontar) {
+  hojaIn.innerHTML = html;
+  if (!hoja.open) hoja.showModal();
+  alMontar?.(hojaIn);
+}
+const cerrar = () => hoja.open && hoja.close();
+hoja.addEventListener("click", e => { if (e.target === hoja) cerrar(); });
+const cab = t => `<div class="hoja-cab"><h2>${t}</h2><button type="button" class="cerrar" data-acc="cerrar" aria-label="Cerrar">×</button></div>`;
+function confirmar(titulo, detalle, textoSi, alSi) {
+  abrir(`${cab(esc(titulo))}<p style="margin:0">${detalle}</p>
+    <div class="acciones lado"><button type="button" class="btn borde" data-acc="cerrar">Cancelar</button>
+    <button type="button" class="btn peligro" id="si">${esc(textoSi)}</button></div>`,
+    r => $("#si", r).onclick = () => { cerrar(); alSi(); });
+}
+
+/* Venta o reserva */
+function hojaVenta(p = null, comoReserva = false) {
+  const editando = !!p;
+  const prods = productos();
+  const cant = {}; for (const i of p?.items || []) cant[i.pid] = i.cant;
+  // Productos de la venta que ya no están activos igual se muestran al editar
+  const extra = (p?.items || []).filter(i => !prods.some(x => x.id === i.pid)).map(i => ({ id: i.pid, nombre: i.nombre, precio: i.precio, sabor: S.productos[i.pid]?.sabor || "otro" }));
+  const filas = [...prods, ...extra];
+  const precioDe = {}; for (const x of filas) precioDe[x.id] = (p?.items || []).find(i => i.pid === x.id)?.precio ?? x.precio;
+  const reserva = editando ? p.estado === "reserva" : comoReserva;
+  abrir(`<form id="f-venta" class="hoja-in" style="padding:0">
+    ${cab(editando ? "Editar venta" : reserva ? "Anotar reserva" : "Nueva venta")}
+    <label class="campo">¿Quién compra?<input id="v-cliente" list="clientes" required autocomplete="off" placeholder="Ej: Sofía 2°B" value="${esc(p?.cliente)}"></label>
+    <div class="items">${filas.length ? filas.map(x => `
+      <div class="item" data-pid="${x.id}">${icoSabor(x.sabor || "otro")}
+        <div class="txt"><div class="t1">${esc(x.nombre)}</div><div class="t2">${pesos(precioDe[x.id])} c/u</div></div>
+        <div class="stepper"><button type="button" data-paso="-1" aria-label="Uno menos de ${esc(x.nombre)}">−</button>
+          <output>${cant[x.id] || 0}</output><button type="button" data-paso="1" aria-label="Uno más de ${esc(x.nombre)}">+</button></div></div>`).join("")
+      : `<p class="aviso">No tienes productos con precio. Puedes escribir el total a mano o agregarlos en «Precios».</p>`}</div>
+    <label class="total-linea"><strong>Total</strong><input id="v-total" inputmode="numeric" aria-label="Total" value="${pesos(p?.total || 0)}"></label>
+    <fieldset class="seg"><legend>¿Ya se lo entregaste?</legend>
+      <label><input type="radio" name="v-estado" value="entregado" ${reserva ? "" : "checked"}><span>Sí, entregado</span></label>
+      <label><input type="radio" name="v-estado" value="reserva" ${reserva ? "checked" : ""}><span>No, es reserva</span></label></fieldset>
+    <label class="campo" id="v-para-w" ${reserva ? "" : "hidden"}>¿Para cuándo?<input id="v-para" type="date" value="${esc(p?.para || "")}"></label>
+    ${editando ? `<p class="nota">Pagado hasta ahora: ${pesos(pagado(p))}. Los pagos se anotan desde el detalle de la venta.</p>` : `
+    <fieldset class="seg"><legend>¿Te pagó?</legend>
+      <label><input type="radio" name="v-pago" value="todo" ${reserva ? "" : "checked"}><span>Pagó todo</span></label>
+      <label><input type="radio" name="v-pago" value="nada" ${reserva ? "checked" : ""}><span>No ha pagado</span></label>
+      <label><input type="radio" name="v-pago" value="parte"><span>Una parte</span></label></fieldset>
+    <label class="campo" id="v-abono-w" hidden>¿Cuánto te pagó?<input id="v-abono" inputmode="numeric" placeholder="$0"></label>`}
+    <label class="campo">Nota (opcional)<input id="v-nota" placeholder="Ej: sin merengue, se lo paso en el recreo" value="${esc(p?.nota)}"></label>
+    <button class="btn" type="submit">${editando ? "Guardar cambios" : reserva ? "Guardar reserva" : "Guardar venta"}</button>
+  </form>`, r => {
+    const f = $("#f-venta", r), total = $("#v-total", r);
+    let totalManual = editando && p.total !== (p.items || []).reduce((s, i) => s + i.cant * i.precio, 0);
+    const recalcular = () => {
+      if (totalManual) return;
+      let t = 0; r.querySelectorAll(".item").forEach(it => t += Number($("output", it).value) * precioDe[it.dataset.pid]);
+      total.value = pesos(t);
+    };
+    r.querySelectorAll("[data-paso]").forEach(b => b.onclick = () => {
+      const o = $("output", b.parentElement); o.value = Math.max(0, Number(o.value) + Number(b.dataset.paso)); recalcular();
+    });
+    total.oninput = () => { totalManual = true; };
+    total.onblur = () => { total.value = pesos(aNumero(total.value)); };
+    f.querySelectorAll("[name=v-estado]").forEach(x => x.onchange = () => { $("#v-para-w", r).hidden = x.value !== "reserva" || !x.checked; });
+    f.querySelectorAll("[name=v-pago]").forEach(x => x.onchange = () => { $("#v-abono-w", r).hidden = x.value !== "parte"; });
+    $("#v-abono", r)?.addEventListener("blur", e => { if (e.target.value) e.target.value = pesos(aNumero(e.target.value)); });
+    f.onsubmit = e => {
+      e.preventDefault();
+      const items = [...r.querySelectorAll(".item")].map(it => {
+        const x = filas.find(y => y.id === it.dataset.pid);
+        return { pid: x.id, nombre: x.nombre, precio: precioDe[x.id], cant: Number($("output", it).value) };
+      }).filter(i => i.cant > 0);
+      const t = aNumero(total.value);
+      if (!t) { toast("Agrega al menos un producto o escribe el total."); return; }
+      const estado = f.querySelector("[name=v-estado]:checked").value;
+      const nuevo = {
+        ...(p || { id: nuevoId(), fecha: hoy(), pagos: [] }),
+        cliente: $("#v-cliente", r).value.trim(), items, total: t, estado,
+        para: estado === "reserva" ? $("#v-para", r).value : (p?.para || ""), nota: $("#v-nota", r).value.trim(),
+      };
+      if (!editando) {
+        const pago = f.querySelector("[name=v-pago]:checked").value;
+        const monto = pago === "todo" ? t : pago === "parte" ? Math.min(t, aNumero($("#v-abono", r).value)) : 0;
+        if (monto > 0) nuevo.pagos = [{ monto, fecha: hoy() }];
+      }
+      if (estado === "entregado" && !nuevo.entregado) nuevo.entregado = hoy();
+      cerrar(); guardar("pedidos", nuevo);
+      toast(editando ? "Cambios guardados" : estado === "reserva" ? "Reserva anotada" : "Venta anotada");
+    };
+  });
+}
+
+function hojaPedido(id) {
+  const p = S.pedidos[id]; if (!p) return;
+  const d = debe(p);
+  abrir(`${cab(esc(p.cliente))}
+    <p class="nota">${p.estado === "reserva" ? `Reserva${p.para ? " para " + esc(fechaCorta(p.para)) : " sin fecha"}` : `Entregado${p.entregado ? " " + esc(fechaCorta(p.entregado)) : ""}`} · anotado ${esc(fechaCorta(p.fecha))}</p>
+    <div class="lista" style="box-shadow:none;background:var(--bg)">${(p.items || []).map(i => `
+      <div class="fila"><span class="txt"><span class="t1">${i.cant} × ${esc(i.nombre)}</span></span><span class="monto">${pesos(i.cant * i.precio)}</span></div>`).join("") || `<div class="fila"><span class="txt t2">Sin detalle de productos</span></div>`}</div>
+    <div class="detalle-num"><div><span>Total</span><strong class="num">${pesos(p.total)}</strong></div>
+      <div><span>Pagado</span><strong class="num">${pesos(pagado(p))}</strong></div>
+      <div><span>Debe</span><strong class="num" style="color:${d ? "var(--malo)" : "var(--ok)"}">${pesos(d)}</strong></div></div>
+    ${(p.pagos || []).length ? `<p class="nota">Pagos: ${p.pagos.map(x => `${pesos(x.monto)} (${esc(fechaCorta(x.fecha))})`).join(", ")}</p>` : ""}
+    ${p.nota ? `<p class="nota">Nota: ${esc(p.nota)}</p>` : ""}
+    <div class="acciones">
+      ${d ? `<button type="button" class="btn" data-acc="pagar" data-id="${p.id}">Anotar pago</button>` : ""}
+      ${p.estado === "reserva" ? `<button type="button" class="btn limon" data-acc="entregar" data-id="${p.id}">Marcar como entregado</button>` : ""}
+      <div class="acciones lado">
+        <button type="button" class="btn borde" data-acc="editar-pedido" data-id="${p.id}">Editar</button>
+        <button type="button" class="btn borde" style="color:var(--malo)" data-acc="borrar-pedido" data-id="${p.id}">Borrar</button></div>
+      ${(p.pagos || []).length ? `<button type="button" class="btn borde chico" data-acc="quitar-pago" data-id="${p.id}">Quitar el último pago</button>` : ""}
+    </div>`);
+}
+
+function hojaPago(id) {
+  const p = S.pedidos[id];
+  abrir(`<form id="f-pago" class="hoja-in" style="padding:0">${cab("Anotar pago")}
+    <p class="nota">${esc(p.cliente)} debe ${pesos(debe(p))} de esta compra.</p>
+    <label class="campo">¿Cuánto te pagó?<input id="pg-monto" inputmode="numeric" value="${pesos(debe(p))}"></label>
+    <button class="btn" type="submit">Guardar pago</button></form>`, r => {
+    const i = $("#pg-monto", r); i.select();
+    $("#f-pago", r).onsubmit = e => {
+      e.preventDefault(); const m = Math.min(aNumero(i.value), debe(p));
+      if (!m) { toast("Escribe cuánto te pagó."); return; }
+      cerrar(); guardar("pedidos", { ...p, pagos: [...(p.pagos || []), { monto: m, fecha: hoy() }] });
+      toast(m >= debe(p) ? "Pagado completo" : `Pago de ${pesos(m)} anotado`);
+    };
+  });
+}
+
+/* Cobrar todo lo que debe una persona: reparte el pago desde la compra más antigua */
+function hojaCobrar(k) {
+  const d = deudores().find(x => clave(x.nombre) === k); if (!d) return;
+  d.pedidos.sort((a, b) => (a.fecha || "").localeCompare(b.fecha || ""));
+  abrir(`<form id="f-cobrar" class="hoja-in" style="padding:0">${cab("Cobrar a " + esc(d.nombre))}
+    <div class="lista" style="box-shadow:none;background:var(--bg)">${d.pedidos.map(p => `
+      <div class="fila"><span class="txt"><span class="t1">${esc(resumenItems(p))}</span><br><span class="t2">${esc(fechaCorta(p.fecha))}</span></span><span class="monto">${pesos(debe(p))}</span></div>`).join("")}</div>
+    <label class="campo">¿Cuánto te pagó?<input id="cb-monto" inputmode="numeric" value="${pesos(d.total)}"></label>
+    <p class="nota">Si paga menos, se descuenta primero de lo más antiguo.</p>
+    <button class="btn" type="submit">Guardar pago</button></form>`, r => {
+    $("#f-cobrar", r).onsubmit = async e => {
+      e.preventDefault(); let m = Math.min(aNumero($("#cb-monto", r).value), d.total);
+      if (!m) { toast("Escribe cuánto te pagó."); return; }
+      const total = m; cerrar();
+      for (const p of d.pedidos) {
+        if (m <= 0) break; const a = Math.min(m, debe(p)); m -= a;
+        await guardar("pedidos", { ...p, pagos: [...(p.pagos || []), { monto: a, fecha: hoy() }] });
+      }
+      toast(`Cobrado ${pesos(total)} a ${d.nombre}`);
+    };
+  });
+}
+
+/* Materiales */
+function hojaMaterial(m = null) {
+  const comprado = m?.estado === "comprado";
+  abrir(`<form id="f-mat" class="hoja-in" style="padding:0">${cab(m ? "Editar material" : "Nuevo material")}
+    <label class="campo">¿Qué es?<input id="m-nombre" required placeholder="Ej: Leche condensada" value="${esc(m?.nombre)}"></label>
+    <label class="campo">Cantidad<input id="m-cant" placeholder="Ej: 3 tarros" value="${esc(m?.cantidad)}"></label>
+    <fieldset class="seg"><legend>¿Para qué pie?</legend>
+      ${["limon","maracuya","ambos","otro"].map(s => `<label><input type="radio" name="m-para" value="${s}" ${(m?.para || "ambos") === s ? "checked" : ""}><span>${{limon:"Limón",maracuya:"Maracuyá",ambos:"Los dos",otro:"Otro"}[s]}</span></label>`).join("")}</fieldset>
+    <fieldset class="seg"><legend>¿Ya lo compraste?</legend>
+      <label><input type="radio" name="m-estado" value="falta" ${comprado ? "" : "checked"}><span>Me falta</span></label>
+      <label><input type="radio" name="m-estado" value="comprado" ${comprado ? "checked" : ""}><span>Ya lo compré</span></label></fieldset>
+    <div class="dos" id="m-compra" ${comprado ? "" : "hidden"}>
+      <label class="campo">¿Cuánto pagaste?<input id="m-costo" inputmode="numeric" placeholder="$0" value="${m?.costo ? pesos(m.costo) : ""}"></label>
+      <label class="campo">¿Cuándo?<input id="m-fecha" type="date" value="${esc(m?.fecha || hoy())}"></label></div>
+    <button class="btn" type="submit">Guardar</button>
+    ${m ? `<div class="acciones lado">
+      ${comprado ? `<button type="button" class="btn borde chico" data-acc="recomprar" data-id="${m.id}">Se acabó: comprar otra vez</button>` : `<span></span>`}
+      <button type="button" class="btn borde chico" style="color:var(--malo)" data-acc="borrar-material" data-id="${m.id}">Borrar</button></div>` : ""}
+  </form>`, r => {
+    const f = $("#f-mat", r);
+    f.querySelectorAll("[name=m-estado]").forEach(x => x.onchange = () => { $("#m-compra", r).hidden = f.querySelector("[name=m-estado]:checked").value !== "comprado"; });
+    $("#m-costo", r).onblur = e => { if (e.target.value) e.target.value = pesos(aNumero(e.target.value)); };
+    f.onsubmit = e => {
+      e.preventDefault();
+      const estado = f.querySelector("[name=m-estado]:checked").value;
+      cerrar();
+      guardar("materiales", { ...(m || { id: nuevoId() }), nombre: $("#m-nombre", r).value.trim(), cantidad: $("#m-cant", r).value.trim(),
+        para: f.querySelector("[name=m-para]:checked").value, estado,
+        costo: estado === "comprado" ? aNumero($("#m-costo", r).value) : 0, fecha: estado === "comprado" ? ($("#m-fecha", r).value || hoy()) : hoy() });
+    };
+  });
+}
+function hojaComprar(id) {
+  const m = S.materiales[id];
+  abrir(`<form id="f-comp" class="hoja-in" style="padding:0">${cab("Compraste " + esc(m.nombre))}
+    <p class="nota">${esc(m.cantidad || "")}</p>
+    <label class="campo">¿Cuánto pagaste?<input id="c-costo" inputmode="numeric" placeholder="$0"></label>
+    <button class="btn" type="submit">Marcar como comprado</button></form>`, r => {
+    $("#c-costo", r).focus();
+    $("#f-comp", r).onsubmit = e => {
+      e.preventDefault(); cerrar();
+      guardar("materiales", { ...m, estado: "comprado", costo: aNumero($("#c-costo", r).value), fecha: hoy() });
+      toast("Anotado como comprado");
+    };
+  });
+}
+
+/* Productos */
+function hojaProducto(p = null) {
+  abrir(`<form id="f-prod" class="hoja-in" style="padding:0">${cab(p ? "Editar producto" : "Nuevo producto")}
+    <label class="campo">Nombre<input id="p-nombre" required placeholder="Ej: Pie de limón (porción)" value="${esc(p?.nombre)}"></label>
+    <label class="campo">Precio<input id="p-precio" inputmode="numeric" required placeholder="$1.500" value="${p ? pesos(p.precio) : ""}"></label>
+    <fieldset class="seg"><legend>Sabor</legend>
+      ${["limon","maracuya","otro"].map(s => `<label><input type="radio" name="p-sabor" value="${s}" ${(p?.sabor || "limon") === s ? "checked" : ""}><span>${{limon:"Limón",maracuya:"Maracuyá",otro:"Otro"}[s]}</span></label>`).join("")}</fieldset>
+    ${lista("recetas").length ? `<label class="campo">¿De qué receta sale?<select id="p-receta"><option value="">Ninguna</option>
+      ${lista("recetas").map(r => `<option value="${r.id}" ${p?.receta === r.id ? "selected" : ""}>${esc(r.nombre)}</option>`).join("")}</select></label>
+    <fieldset class="seg"><legend>¿Qué vendes?</legend>
+      <label><input type="radio" name="p-tipo" value="porcion" ${(p?.tipo || "porcion") === "porcion" ? "checked" : ""}><span>Una porción</span></label>
+      <label><input type="radio" name="p-tipo" value="entero" ${p?.tipo === "entero" ? "checked" : ""}><span>El pie entero</span></label></fieldset>`
+      : `<p class="nota">Si anotas la receta en «Recetas», la app te dice cuánto te cuesta y cuánto ganas con este producto.</p>`}
+    ${p ? `<label style="display:flex;gap:10px;align-items:center;font-weight:700"><input type="checkbox" id="p-oculto" ${p.activo === false ? "checked" : ""} style="width:22px;height:22px"> Ocultarlo al vender (ya no lo hago)</label>` : ""}
+    <button class="btn" type="submit">Guardar</button>
+    ${p ? `<button type="button" class="btn borde chico" style="color:var(--malo)" data-acc="borrar-producto" data-id="${p.id}">Borrar producto</button>` : ""}
+  </form>`, r => {
+    $("#p-precio", r).onblur = e => { if (e.target.value) e.target.value = pesos(aNumero(e.target.value)); };
+    $("#f-prod", r).onsubmit = e => {
+      e.preventDefault(); cerrar();
+      guardar("productos", { ...(p || { id: nuevoId(), orden: lista("productos").length + 1 }), nombre: $("#p-nombre", r).value.trim(),
+        precio: aNumero($("#p-precio", r).value), sabor: $("#f-prod", r).querySelector("[name=p-sabor]:checked").value,
+        activo: !($("#p-oculto", r)?.checked),
+        receta: $("#p-receta", r)?.value ?? (p?.receta || ""), tipo: $("#f-prod", r).querySelector("[name=p-tipo]:checked")?.value || p?.tipo || "porcion" });
+    };
+  });
+}
+
+/* Recetas */
+const TIPICOS = {
+  base: [["Galletas", 1, "paquete", 1], ["Mantequilla", 100, "g", 250], ["Leche condensada", 2, "tarro", 1], ["Huevos", 3, "unidad", 12], ["Azúcar (merengue)", 100, "g", 1000]],
+  limon: [["Limones", 6, "unidad", 10]],
+  maracuya: [["Pulpa de maracuyá", 250, "g", 500]],
+};
+const filaIng = g => `<div class="ing">
+  <div class="ing-top"><input class="g-nombre" placeholder="Ingrediente" aria-label="Ingrediente" value="${esc(g.nombre)}">
+    <button type="button" class="ing-x" aria-label="Quitar ingrediente">×</button></div>
+  <div class="ing-grid">
+    <label>Usas<input class="g-usas" inputmode="decimal" placeholder="100" value="${g.usas ?? ""}"></label>
+    <label>Unidad<input class="g-unidad" placeholder="g" value="${esc(g.unidad)}"></label>
+    <label>Viene en<input class="g-viene" inputmode="decimal" placeholder="250" value="${g.viene ?? ""}"></label>
+    <label>Cuesta<input class="g-cuesta" inputmode="numeric" placeholder="$0" value="${g.cuesta ? pesos(g.cuesta) : ""}"></label></div>
+  <div class="t2 g-costo num"></div></div>`;
+function hojaReceta(r = null) {
+  abrir(`<form id="f-rec" class="hoja-in" style="padding:0">${cab(r ? "Editar receta" : "Nueva receta")}
+    <label class="campo">Nombre<input id="r-nombre" required placeholder="Ej: Pie de limón" value="${esc(r?.nombre)}"></label>
+    <fieldset class="seg"><legend>Sabor</legend>
+      ${["limon","maracuya","otro"].map(x => `<label><input type="radio" name="r-sabor" value="${x}" ${(r?.sabor || "limon") === x ? "checked" : ""}><span>${{limon:"Limón",maracuya:"Maracuyá",otro:"Otro"}[x]}</span></label>`).join("")}</fieldset>
+    <div class="dos">
+      <label class="campo">¿Para cuántos pies alcanza la receta?<input id="r-pies" inputmode="numeric" value="${r?.pies || 1}"></label>
+      <label class="campo">¿Cuántas porciones salen de cada pie?<input id="r-rinde" inputmode="numeric" value="${r?.rinde || 8}"></label></div>
+    <div><strong>Ingredientes de la receta</strong>
+      <p class="nota">Pon las cantidades tal como dice tu receta. Para saber cuánto te cuesta, anota también en qué cantidad viene el envase y su precio (en la misma unidad). Ej: usas 100 g de mantequilla, viene en 250 g y cuesta $2.500.</p></div>
+    <div id="r-ings" class="ings">${(r?.ingredientes || []).map(filaIng).join("")}</div>
+    <div class="pegar" id="r-pegar-w" hidden>
+      <label class="campo">Pega o escribe tu receta, un ingrediente por línea
+        <textarea id="r-texto" rows="7" placeholder="200 g de galletas&#10;100 g de mantequilla&#10;2 tarros de leche condensada&#10;6 limones&#10;3 huevos"></textarea></label>
+      <button type="button" class="btn chico" id="r-leer">Agregar estos ingredientes</button></div>
+    <div class="acciones lado"><button type="button" class="btn suave chico" id="r-mas">＋ Ingrediente</button>
+      <button type="button" class="btn suave chico" id="r-pegar">Pegar mi receta</button></div>
+    <button type="button" class="btn borde chico" id="r-tipicos">Poner ingredientes típicos</button>
+    <div class="total-linea"><strong id="r-costo-t">Un pie te cuesta</strong><strong id="r-costo" class="num" style="font-family:var(--f-display);font-size:1.2rem"></strong></div>
+    <p class="nota num" id="r-porcion"></p>
+    <button class="btn" type="submit">Guardar receta</button>
+    ${r ? `<button type="button" class="btn borde chico" style="color:var(--malo)" data-acc="borrar-receta" data-id="${r.id}">Borrar receta</button>` : ""}
+  </form>`, root => {
+    const f = $("#f-rec", root), cont = $("#r-ings", root);
+    const leer = () => [...cont.querySelectorAll(".ing")].map(d => ({ nombre: $(".g-nombre", d).value.trim(), usas: num($(".g-usas", d).value),
+      unidad: $(".g-unidad", d).value.trim(), viene: num($(".g-viene", d).value), cuesta: aNumero($(".g-cuesta", d).value) }));
+    const calc = () => {
+      const gs = leer(); let t = 0;
+      cont.querySelectorAll(".ing").forEach((d, k) => { const c = costoIng(gs[k]); t += c; $(".g-costo", d).textContent = c ? `En la receta: ${pesos(c)}` : ""; });
+      const rinde = Math.max(1, aNumero($("#r-rinde", root).value) || 1), pies = Math.max(1, aNumero($("#r-pies", root).value) || 1);
+      $("#r-costo-t", root).textContent = pies > 1 ? `Toda la receta: ${pesos(t)} · cada pie` : "Un pie te cuesta";
+      t = t / pies;
+      $("#r-costo", root).textContent = pesos(t);
+      $("#r-porcion", root).textContent = t ? `Cada porción te cuesta ${pesos(t / rinde)}. Para ganar al menos lo mismo, véndela a ${pesos(sugerido(t / rinde))} o más.` : "";
+    };
+    const agregar = g => { cont.insertAdjacentHTML("beforeend", filaIng(g)); calc(); };
+    if (!r) agregar({});
+    $("#r-mas", root).onclick = () => { agregar({}); cont.lastElementChild.querySelector(".g-nombre").focus(); };
+    $("#r-pegar", root).onclick = () => { const w = $("#r-pegar-w", root); w.hidden = !w.hidden; if (!w.hidden) $("#r-texto", root).focus(); };
+    $("#r-leer", root).onclick = () => {
+      const gs = $("#r-texto", root).value.split(/\n/).map(leerLinea).filter(Boolean);
+      if (!gs.length) { toast("No encontré ingredientes. Escribe uno por línea, ej: 200 g de galletas"); return; }
+      cont.querySelectorAll(".ing").forEach(d => { if (!$(".g-nombre", d).value.trim()) d.remove(); });
+      gs.forEach(agregar); $("#r-texto", root).value = ""; $("#r-pegar-w", root).hidden = true;
+      toast(`${gs.length} ingredientes agregados. Revísalos y pon el envase y el precio.`);
+    };
+    $("#r-tipicos", root).onclick = () => {
+      const sab = f.querySelector("[name=r-sabor]:checked").value, ya = new Set(leer().map(g => clave(g.nombre)));
+      cont.querySelectorAll(".ing").forEach(d => { if (!$(".g-nombre", d).value.trim()) d.remove(); });
+      const pies = Math.max(1, aNumero($("#r-pies", root).value) || 1);
+      for (const [nombre, usas, unidad, viene] of [...TIPICOS.base, ...(TIPICOS[sab] || [])]) if (!ya.has(clave(nombre))) agregar({ nombre, usas: usas * pies, unidad, viene });
+      toast("Revisa las cantidades y pon lo que te cuesta cada cosa");
+    };
+    cont.addEventListener("click", e => { const x = e.target.closest(".ing-x"); if (x) { x.closest(".ing").remove(); calc(); } });
+    f.addEventListener("input", calc);
+    cont.addEventListener("focusout", e => { if (e.target.classList.contains("g-cuesta") && e.target.value) e.target.value = pesos(aNumero(e.target.value)); });
+    calc();
+    f.onsubmit = e => {
+      e.preventDefault(); cerrar();
+      guardar("recetas", { ...(r || { id: nuevoId() }), nombre: $("#r-nombre", root).value.trim(), sabor: f.querySelector("[name=r-sabor]:checked").value,
+        rinde: Math.max(1, aNumero($("#r-rinde", root).value) || 1), pies: Math.max(1, aNumero($("#r-pies", root).value) || 1),
+        ingredientes: leer().filter(g => g.nombre) });
+      toast(r ? "Receta guardada" : "Receta guardada. En «Precios» elige qué productos salen de ella.");
+    };
+  });
+}
+
+function hojaCompras() {
+  const rs = lista("recetas").sort((a, b) => a.nombre.localeCompare(b.nombre));
+  abrir(`<form id="f-cc" class="hoja-in" style="padding:0">${cab("¿Cuánto comprar?")}
+    <p class="nota" style="margin:0">¿Cuántos pies vas a hacer?</p>
+    <div class="items">${rs.map(r => `<div class="item" data-rid="${r.id}">${icoSabor(r.sabor || "otro")}
+      <div class="txt"><div class="t1">${esc(r.nombre)}</div><div class="t2 num">${pesos(costoReceta(r))} cada uno</div></div>
+      <div class="stepper"><button type="button" data-paso="-1" aria-label="Un pie menos de ${esc(r.nombre)}">−</button><output>0</output>
+        <button type="button" data-paso="1" aria-label="Un pie más de ${esc(r.nombre)}">+</button></div></div>`).join("")}</div>
+    <div id="cc-res"></div>
+    <p class="nota" id="cc-nada" hidden>Con lo que tienes en casa te alcanza: no necesitas comprar nada.</p>
+    <button class="btn" type="submit" id="cc-ok" disabled>Pasar a «Por comprar»</button></form>`, root => {
+    let lista_ = [];
+    const calc = () => {
+      const pies = {}; root.querySelectorAll(".item").forEach(it => pies[it.dataset.rid] = Number($("output", it).value));
+      lista_ = calcularCompras(pies);
+      const total = lista_.reduce((t, x) => t + x.costo, 0);
+      $("#cc-res", root).innerHTML = lista_.length ? `<div class="lista" style="box-shadow:none;background:var(--bg)">${lista_.map(x => `
+        <div class="fila"><span class="txt"><span class="t1">${esc(x.nombre)}</span><br><span class="t2 num">Necesitas ${fmtNum(x.usar)} ${esc(x.unidad)}${x.tienes ? `, tienes ${fmtNum(x.tienes)}` : ""} → compra ${esc(x.cantidad)}</span></span>
+          <span class="monto">${x.costo ? pesos(x.costo) : ""}</span></div>`).join("")}</div>
+        <div class="total-linea" style="margin-top:10px"><strong>Gastarías más o menos</strong><strong class="num">${pesos(total)}</strong></div>` : "";
+      $("#cc-ok", root).disabled = !lista_.length;
+      $("#cc-nada", root).hidden = !!lista_.length || !Object.values(pies).some(Boolean);
+    };
+    root.querySelectorAll("[data-paso]").forEach(b => b.onclick = () => { const o = $("output", b.parentElement); o.value = Math.max(0, Number(o.value) + Number(b.dataset.paso)); calc(); });
+    $("#f-cc", root).onsubmit = async e => {
+      e.preventDefault(); cerrar();
+      const faltan = lista("materiales").filter(m => m.estado !== "comprado");
+      for (const x of lista_) {
+        const ya = faltan.find(m => clave(m.nombre) === clave(x.nombre));
+        await guardar("materiales", ya ? { ...ya, cantidad: x.cantidad } : { id: nuevoId(), nombre: x.nombre, cantidad: x.cantidad, para: x.para, estado: "falta", costo: 0, fecha: hoy() });
+      }
+      toast(`${lista_.length} cosas en «Por comprar»`); ir("compras");
+    };
+  });
+}
+
+function hojaDespensa() {
+  const ings = ingredientesUnicos(), d = despensa();
+  if (!ings.length) { toast("Primero anota los ingredientes en tus recetas."); return; }
+  abrir(`<form id="f-desp" class="hoja-in" style="padding:0">${cab("¿Qué tienes en casa?")}
+    <p class="nota" style="margin:0">Anota cuánto te queda de cada cosa, en la misma unidad de la receta. Si no tienes, déjalo en 0.</p>
+    <div class="items">${ings.map(([k, g]) => `<label class="item desp" data-k="${esc(k)}">
+      <span class="txt"><span class="t1">${esc(g.nombre)}</span></span>
+      <input class="cant" inputmode="decimal" value="${d[k] ? fmtNum(d[k]) : ""}" placeholder="0" aria-label="Cuánto ${esc(g.unidad)} de ${esc(g.nombre)} tienes">
+      <span class="t2 unidad">${esc(g.unidad)}</span></label>`).join("")}</div>
+    <div id="desp-res" class="lista" style="box-shadow:none;background:var(--bg)"></div>
+    <button class="btn" type="submit">Guardar</button></form>`, root => {
+    const leer = () => { const items = {}; root.querySelectorAll(".desp").forEach(it => { const n = num($(".cant", it).value); if (n > 0) items[it.dataset.k] = n; }); return items; };
+    const calc = () => {
+      const antes = S.ajustes.despensa; S.ajustes.despensa = { items: leer() };
+      $("#desp-res", root).innerHTML = lista("recetas").map(r => { const a = alcanzaPara(r); return `<div class="fila">${icoSabor(r.sabor || "otro")}
+        <span class="txt"><span class="t1">${esc(r.nombre)}</span></span><span class="alcanza num"><strong>${a ? a.pies : 0}</strong>${a?.pies === 1 ? "pie" : "pies"}</span></div>`; }).join("");
+      if (antes) S.ajustes.despensa = antes; else delete S.ajustes.despensa;
+    };
+    $("#f-desp", root).addEventListener("input", calc); calc();
+    $("#f-desp", root).onsubmit = e => { e.preventDefault(); cerrar(); guardar("ajustes", { id: "despensa", items: leer() }); toast("Guardado lo que tienes en casa"); };
+  });
+}
+
+function hojaLlevado() {
+  const prods = productos(), lle = llevadoHoy();
+  abrir(`<form id="f-lle" class="hoja-in" style="padding:0">${cab("¿Cuánto llevaste hoy?")}
+    <p class="nota" style="margin:0">Anota cuántos llevaste de cada uno. La app irá descontando lo que vendas hoy.</p>
+    <div class="items">${prods.map(p => `<div class="item" data-pid="${p.id}">${icoSabor(p.sabor || "otro")}
+      <div class="txt"><div class="t1">${esc(p.nombre)}</div><div class="t2">Vendidos hoy: ${vendidoHoyDe(p.id)}</div></div>
+      <div class="stepper"><button type="button" data-paso="-1" aria-label="Uno menos de ${esc(p.nombre)}">−</button>
+        <input class="cant" inputmode="numeric" aria-label="Cuántos ${esc(p.nombre)}" value="${lle[p.id] ?? 0}">
+        <button type="button" data-paso="1" aria-label="Uno más de ${esc(p.nombre)}">+</button></div></div>`).join("")}</div>
+    <button class="btn" type="submit">Guardar</button></form>`, root => {
+    root.querySelectorAll("[data-paso]").forEach(b => b.onclick = () => { const i = $(".cant", b.parentElement); i.value = Math.max(0, aNumero(i.value) + Number(b.dataset.paso)); });
+    $("#f-lle", root).onsubmit = e => {
+      e.preventDefault(); const llevado = {};
+      root.querySelectorAll(".item").forEach(it => { const n = aNumero($(".cant", it).value); if (n) llevado[it.dataset.pid] = n; });
+      cerrar(); guardar("dias", { id: hoy(), llevado }); toast("Anotado lo que llevaste hoy");
+    };
+  });
+}
+
+function hojaAntes() {
+  const items = plataAntes();
+  abrir(`<form id="f-antes" class="hoja-in" style="padding:0">${cab("Plata de antes de la app")}
+    <p class="nota" style="margin:0">Anota lo que ya habías ganado vendiendo pies antes de usar Pepita Pie. Se suma a tu plata, a tu ganancia y a tu meta.</p>
+    ${items.length ? `<div class="lista" style="box-shadow:none;background:var(--bg)">${items.map(x => `
+      <div class="fila"><span class="txt"><span class="t1">${esc(x.nota || "Ganancia anterior")}</span>${x.fecha ? `<br><span class="t2">anotado ${esc(fechaCorta(x.fecha))}</span>` : ""}</span>
+        <span class="monto">${pesos(x.monto)}</span>
+        <button type="button" class="ing-x" data-quitar="${x.id}" aria-label="Quitar ${esc(x.nota || "esta plata")}">×</button></div>`).join("")}
+      <div class="fila"><span class="txt"><strong>Total</strong></span><span class="monto">${pesos(items.reduce((t, x) => t + x.monto, 0))}</span></div></div>` : ""}
+    <label class="campo">¿Cuánto ganaste?<input id="an-monto" inputmode="numeric" placeholder="$20.000" required></label>
+    <label class="campo">¿De qué? (opcional)<input id="an-nota" placeholder="Ej: ventas de septiembre"></label>
+    <button class="btn" type="submit">Agregar</button></form>`, root => {
+    $("#an-monto", root).onblur = e => { if (e.target.value) e.target.value = pesos(aNumero(e.target.value)); };
+    root.querySelectorAll("[data-quitar]").forEach(b => b.onclick = () => {
+      const x = items.find(i => i.id === b.dataset.quitar);
+      confirmar("¿Quitar esta plata?", `${esc(x.nota || "Ganancia anterior")}: ${pesos(x.monto)}.`, "Quitar", () => {
+        guardar("ajustes", { id: "antes", items: items.filter(i => i.id !== x.id) }); toast("Quitado");
+      });
+    });
+    $("#f-antes", root).onsubmit = e => {
+      e.preventDefault(); const monto = aNumero($("#an-monto", root).value);
+      if (!monto) { toast("Escribe cuánto ganaste."); return; }
+      guardar("ajustes", { id: "antes", items: [...items, { id: nuevoId(), monto, nota: $("#an-nota", root).value.trim(), fecha: hoy() }] });
+      toast(`Sumado ${pesos(monto)} a tu plata`); hojaAntes();
+    };
+  });
+}
+
+function hojaMeta() {
+  const m = S.ajustes.meta;
+  abrir(`<form id="f-meta" class="hoja-in" style="padding:0">${cab("Meta de ahorro")}
+    <label class="campo">¿Para qué estás juntando?<input id="mt-nombre" placeholder="Ej: Gira de estudios" value="${esc(m?.nombre)}"></label>
+    <label class="campo">¿Cuánto quieres juntar?<input id="mt-monto" inputmode="numeric" required placeholder="$50.000" value="${m?.monto ? pesos(m.monto) : ""}"></label>
+    <p class="nota" style="margin:0">El avance es tu ganancia: lo que te han pagado (más lo que ganaste antes de la app) menos lo que gastaste en materiales.</p>
+    <button class="btn" type="submit">Guardar meta</button>
+    ${m ? `<button type="button" class="btn borde chico" style="color:var(--malo)" data-acc="quitar-meta">Quitar la meta</button>` : ""}</form>`, root => {
+    $("#mt-monto", root).onblur = e => { if (e.target.value) e.target.value = pesos(aNumero(e.target.value)); };
+    $("#f-meta", root).onsubmit = e => {
+      e.preventDefault(); const monto = aNumero($("#mt-monto", root).value);
+      if (!monto) { toast("Escribe cuánto quieres juntar."); return; }
+      cerrar(); guardar("ajustes", { id: "meta", nombre: $("#mt-nombre", root).value.trim(), monto }); toast("Meta guardada");
+    };
+  });
+}
+
+/* ---------- acciones ---------- */
+const ACC = {
+  "cerrar": cerrar,
+  "respaldo": guardarRespaldo,
+  "borrar-todo": () => {
+    const n = COLS.reduce((t, c) => t + Object.keys(S[c]).length, 0);
+    confirmar("¿Borrar todo?", `Se borran tus productos, recetas, ventas, reservas, pagos, materiales y tu meta (${n} registros). No se puede deshacer${modo === "local" ? ": si quieres, guarda antes un respaldo" : ""}.`, "Borrar todo", async () => {
+      for (const c of COLS) for (const id of Object.keys(S[c])) await borrar(c, id);
+      toast("Todo borrado: empieza agregando tus productos en Precios");
+    });
+  },
+  "restaurar": () => $("#archivo-respaldo").click(),
+  "nueva-venta": () => hojaVenta(null, false),
+  "nueva-reserva": () => hojaVenta(null, true),
+  "ver-pedido": el => hojaPedido(el.dataset.id),
+  "editar-pedido": el => hojaVenta(S.pedidos[el.dataset.id]),
+  "pagar": el => hojaPago(el.dataset.id),
+  "cobrar": el => hojaCobrar(el.dataset.k),
+  "entregar": el => { const p = S.pedidos[el.dataset.id]; cerrar(); guardar("pedidos", { ...p, estado: "entregado", entregado: hoy() });
+    toast(debe(p) ? `Entregado. Aún debe ${pesos(debe(p))}` : "Entregado"); },
+  "borrar-pedido": el => { const p = S.pedidos[el.dataset.id];
+    confirmar("¿Borrar esta venta?", `${esc(p.cliente)}: ${esc(resumenItems(p))} por ${pesos(p.total)}. También se borran sus pagos.`, "Borrar", () => { borrar("pedidos", p.id); toast("Venta borrada"); }); },
+  "quitar-pago": el => { const p = S.pedidos[el.dataset.id]; const u = p.pagos[p.pagos.length - 1];
+    confirmar("¿Quitar el último pago?", `Se quita el pago de ${pesos(u.monto)} del ${esc(fechaCorta(u.fecha))}.`, "Quitar pago", () => { guardar("pedidos", { ...p, pagos: p.pagos.slice(0, -1) }); toast("Pago quitado"); }); },
+  "nuevo-material": () => hojaMaterial(),
+  "editar-material": el => hojaMaterial(S.materiales[el.dataset.id]),
+  "comprar": el => hojaComprar(el.dataset.id),
+  "recomprar": el => { const m = S.materiales[el.dataset.id]; cerrar();
+    guardar("materiales", { id: nuevoId(), nombre: m.nombre, cantidad: m.cantidad, para: m.para, estado: "falta", costo: 0, fecha: hoy() }); toast("Agregado a «Por comprar»"); },
+  "borrar-material": el => { const m = S.materiales[el.dataset.id];
+    confirmar("¿Borrar este material?", `${esc(m.nombre)}${m.costo ? ` (${pesos(m.costo)}). Ese gasto deja de contar.` : "."}`, "Borrar", () => borrar("materiales", m.id)); },
+  "lista-tipica": async () => { for (const m of SEMILLA.materiales) await guardar("materiales", { id: nuevoId(), estado: "falta", costo: 0, fecha: hoy(), ...m }); },
+  "productos-tipicos": async () => { for (const p of SEMILLA.productos) await guardar("productos", { id: nuevoId(), activo: true, ...p }); toast("Revisa que los precios sean los tuyos"); },
+  "copiar-lista": async () => {
+    const t = "Por comprar:\n" + lista("materiales").filter(m => m.estado !== "comprado").map(m => `- ${m.nombre}${m.cantidad ? " (" + m.cantidad + ")" : ""}`).join("\n");
+    try { await navigator.clipboard.writeText(t); toast("Lista copiada"); }
+    catch { abrir(`${cab("Copia la lista")}<textarea class="buscar" rows="10" readonly>${esc(t)}</textarea>`, r => { const x = $("textarea", r); x.focus(); x.select(); }); }
+  },
+  "rapida": el => {
+    const p = S.productos[el.dataset.id], q = quedan(p.id);
+    const ped = { id: nuevoId(), cliente: "Venta rápida", rapida: true, items: [{ pid: p.id, nombre: p.nombre, precio: p.precio, cant: 1 }],
+      total: p.precio, estado: "entregado", entregado: hoy(), fecha: hoy(), pagos: [{ monto: p.precio, fecha: hoy() }], para: "", nota: "" };
+    guardar("pedidos", ped);
+    toast(`+1 ${p.nombre}${q === null ? "" : q - 1 <= 0 ? " · ¡se acabaron!" : ` · quedan ${q - 1}`}`, { texto: "Deshacer", fn: () => borrar("pedidos", ped.id) });
+  },
+  "llevado": hojaLlevado,
+  "despensa": hojaDespensa,
+  "editar-meta": hojaMeta,
+  "plata-antes": hojaAntes,
+  "quitar-meta": () => { cerrar(); borrar("ajustes", "meta"); },
+  "nueva-receta": () => hojaReceta(),
+  "editar-receta": el => hojaReceta(S.recetas[el.dataset.id]),
+  "borrar-receta": el => { const r = S.recetas[el.dataset.id];
+    confirmar("¿Borrar " + r.nombre + "?", "Los productos que salían de esta receta dejan de mostrar cuánto te cuestan.", "Borrar", () => borrar("recetas", r.id)); },
+  "calcular-compras": hojaCompras,
+  "nuevo-producto": () => hojaProducto(),
+  "editar-producto": el => hojaProducto(S.productos[el.dataset.id]),
+  "borrar-producto": el => { const p = S.productos[el.dataset.id];
+    confirmar("¿Borrar " + p.nombre + "?", "Las ventas que ya anotaste no cambian. Si solo dejaste de hacerlo, mejor ocúltalo.", "Borrar", () => borrar("productos", p.id)); },
+};
+document.addEventListener("click", e => {
+  const ir_ = e.target.closest("[data-ir]"); if (ir_) { cerrar(); ir(ir_.dataset.ir); return; }
+  const f = e.target.closest("[data-filtro]"); if (f) { filtro = f.dataset.filtro; render(); return; }
+  const sb = e.target.closest("[data-sub]"); if (sb) { subVentas = sb.dataset.sub; render(); return; }
+  const dd = e.target.closest("[data-dia]"); if (dd) { diaSel = dd.dataset.dia; render(); return; }
+  const a = e.target.closest("[data-acc]"); if (a && ACC[a.dataset.acc]) { e.preventDefault(); ACC[a.dataset.acc](a); }
+});
+document.addEventListener("input", e => { if (e.target.id === "buscar") { busqueda = e.target.value; render(); } });
+
+$("#archivo-respaldo").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; if (f) leerRespaldo(f); });
+iniciar();
+</script>
+<script>if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js");</script>
+</body>
+</html>
